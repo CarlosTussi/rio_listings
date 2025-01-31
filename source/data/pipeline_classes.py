@@ -27,36 +27,40 @@ from sklearn.impute import SimpleImputer
 '''
 class ColumnDroppersTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
-        pass
-        
-    def transform(self, X, y=None):
-        
-        print("Start - ColumnDroppersTransformer")
-        
+        self.drop_feat = []
+
+
+    def fit(self, X, y=None):
+
         # Find features related to host, id and url
         re_drop = ".*host.*|.*id.*|.*url.*"
-        drop_feat = []
         for feat in X.columns:
             if re.match(re_drop, feat):
-                 drop_feat.append(feat)
+                 self.drop_feat.append(feat)
         # Add extra features that for sure will not ber part of the model
-        drop_feat.extend(["calendar_updated", "license", "neighbourhood_group_cleansed","neighbourhood_cleansed", "neighbourhood", "neighborhood_overview", 
+        # This could be defined in the init step, but placed here together if the regex feature selection for better organisation
+        self.drop_feat.extend(["calendar_updated", "license", "neighbourhood_group_cleansed","neighbourhood_cleansed", "neighbourhood", "neighborhood_overview", 
                           "last_scraped", "source", "first_review", "last_review", "name", "number_of_reviews_l30d", "number_of_reviews",
                           "availability_30","availability_60","availability_90", "minimum_nights", "maximum_nights", "review_scores_value",  
                          "review_scores_accuracy", "review_scores_rating", "review_scores_checkin", "review_scores_cleanliness", "review_scores_communication",
                          "has_availability", "instant_bookable", "calendar_last_scraped", 'minimum_minimum_nights', 'maximum_minimum_nights', 'minimum_maximum_nights', 
                           'maximum_maximum_nights', 'maximum_nights_avg_ntm', 'property_type'])
+
+
+        return self
+    
+    def transform(self, X, y=None):
         
-        X = X.drop(drop_feat, axis = 1)
+        print("Start - ColumnDroppersTransformer")
+        
+        X = X.drop(self.drop_feat, axis = 1)
         
         print("End - ColumnDroppersTransformer")
         
         print(X.columns)
-        #print(X.room_type.unique())
+ 
         return X
     
-    def fit(self, X, y=None):
-        return self
     
 
 
@@ -74,6 +78,9 @@ class DropNasTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, features):
         self.features = features
     
+    def fit(self, X):
+        return self
+
     def transform(self, X, y=None):
         
         print("Start - DropNasTransformer")
@@ -86,11 +93,6 @@ class DropNasTransformer(BaseEstimator, TransformerMixin):
         
         
         return X
-    
-    def fit(self, X):
-        
-        
-        return self
     
 
 
@@ -122,35 +124,29 @@ class OutlierRemover(BaseEstimator, TransformerMixin):
         self.mode = mode  #mode of operation (cap value or remove value)
         self.operator = operator #lt, eq, gt, ...
      
+    def fit(self, X):
+        return self
     
     def transform(self, X, y=None):
         
         print("Start - OutlierRemover")
 
         
-        
         NAME = 0
         LIMIT = 1
         REPLACE_VALUE = 2
         for a_feature in self.features_limit:
-            if(self.mode == "remove"): ###!!! check if it works
-                X = X.drop(X[self.opt_dict[self.operator](X[a_feature[NAME]], a_feature[LIMIT])].index, axis = 0)
-            elif(self.mode == "cap"):
+            if(self.mode == "cap"):
                 X[a_feature[NAME]] =  X[a_feature[NAME]].apply(lambda x : x if self.opt_dict[self.operator](x,a_feature[LIMIT]) else a_feature[LIMIT])
             elif(self.mode == "replace"):
                 X[a_feature[NAME]] =  X[a_feature[NAME]].apply(lambda x : a_feature[REPLACE_VALUE] if self.opt_dict[self.operator](x,a_feature[LIMIT]) else x)
         
-
-        #print(X.room_type.unique())
-        #input()
         
         print("End - OutlierRemover")
         
         
         return X
-    
-    def fit(self, X):
-        return self
+
         
         
 
@@ -172,13 +168,9 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
         self.init = init
         self.n_init = n_init
         self.max_iter = max_iter
-    
-    def transform(self, X, y=None):
-        
-        print("Start - ClusterGeolocationTransformer")
-        
-        # Initialize the model
-        k_means = KMeans(
+
+        # Initialize KMeans model
+        self.k_means = KMeans(
             init = self.init,
             n_clusters = self.clusters,
             n_init = self.n_init,
@@ -186,22 +178,36 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
             random_state = 69
         )
 
+        # Initialize the encoder
+        self.onehot_encoder_cluster = OneHotEncoder(sparse_output = False, feature_name_combiner='concat')
+
+        
+    def fit(self, X):
 
         #Select the data to be clustered
         df_kmeans = X.loc[:,["latitude", "longitude"]]
 
         # Fitting
-        k_means.fit(df_kmeans)
-
+        self.k_means.fit(df_kmeans)
         #Clusters as a feature
-        X['geo_cluster'] = k_means.labels_ 
-        #X['geo_cluster'] = X['geo_cluster'].astype("str") # Probably not needed (!) - checkc
+        X['geo_cluster'] = self.k_means.labels_ 
 
-        ## Encode here
+
+        # Onde-Hot-Encoder
+        self.onehot_encoder_cluster.fit(X[["geo_cluster"]])
+
+
+        return self
+
+
+
+    def transform(self, X, y=None):
         
-        onehot_encoder_cluster = OneHotEncoder(sparse_output = False, feature_name_combiner='concat')
-        series_cluster_onehot = onehot_encoder_cluster.fit_transform(X[["geo_cluster"]])
-        encoded_cat_str = [str(x) for x in onehot_encoder_cluster.categories_[0]]
+        print("Start - ClusterGeolocationTransformer")
+
+        ## Encode new feature
+        encoded_cat_str = [str(x) for x in self.onehot_encoder_cluster.get_feature_names_out(["geo_cluster"])]
+        series_cluster_onehot = self.onehot_encoder_cluster.transform(X[['geo_cluster']])
         X[encoded_cat_str] = series_cluster_onehot
         X = X.drop("geo_cluster", axis = 1)
     
@@ -213,10 +219,6 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
         print("End - ClusterGeolocationTransformer")
         
         return X
-    
-    def fit(self, X):
-        return self
-
 
 
 
@@ -234,6 +236,8 @@ class PreprocessCorpus(BaseEstimator, TransformerMixin):
     def __init__(self, corpus_feature):
         self.corpus_feature = corpus_feature
 
+    def fit(self, X):
+        return self
     
     def transform(self, X, y=None):
         
@@ -253,9 +257,7 @@ class PreprocessCorpus(BaseEstimator, TransformerMixin):
         print("End - PreprocessCorpus")
         
         return X
-    
-    def fit(self, X):
-        return self    
+        
 
 
 
@@ -275,6 +277,10 @@ class ContainWordsTransformer(BaseEstimator, TransformerMixin):
         self.new_feature_name = new_feature_name
         self.corpus_target = corpus_target
     
+
+    def fit(self, X):
+        return self
+
     def transform(self, X, y=None):
         
         print("Start - ContainWordsTransformer")
@@ -307,9 +313,7 @@ class ContainWordsTransformer(BaseEstimator, TransformerMixin):
         print("End - ContainWordsTransformer")
         
         return X
-    
-    def fit(self, X):
-        return self
+
     
     
 
@@ -328,6 +332,10 @@ class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, amenities_dict):
         self.amenities_dict = amenities_dict
     
+
+    def fit(self, X):
+        return self
+
     def transform(self, X, y=None):
         
         print("Start - ExtractAmenitiesTransformer")
@@ -359,9 +367,6 @@ class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin):
 
         return X
     
-    def fit(self, X):
-        return self
-    
     
    
 '''
@@ -378,6 +383,9 @@ class ExtractBathroom(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
     
+    def fit(self, X):
+        return self
+
     def transform(self, X, y=None):
 
         print("Start - ExtractBathroom")
@@ -388,7 +396,6 @@ class ExtractBathroom(BaseEstimator, TransformerMixin):
 
             # Case if it is a missing value
             if(pd.isna(a_bath)):
-                number_bath = np.nan
                 is_shared = np.nan
                 
             # Check if bathroom is shared using regex
@@ -409,8 +416,6 @@ class ExtractBathroom(BaseEstimator, TransformerMixin):
         
         return X
     
-    def fit(self, X):
-        return self
     
 
 
@@ -431,6 +436,8 @@ class ExtractScore(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
 
+    def fit(self, X):
+        return self  
     
     def transform(self, X, y=None):
         
@@ -442,8 +449,6 @@ class ExtractScore(BaseEstimator, TransformerMixin):
         
         return X
     
-    def fit(self, X):
-        return self  
 
 
 
@@ -460,24 +465,54 @@ class ExtractScore(BaseEstimator, TransformerMixin):
 class CatImputer(BaseEstimator, TransformerMixin):
     def __init__(self, features_limits):
         self.features_limits = features_limits
-    
+
+        self.imputers = {}
+
+       
+
+    def fit(self, X):
+
+
+        # For each feature in the list
+        for feat_tuple in self.features_limits:
+            feature_name =  feat_tuple[0]
+            feature_replace_value = feat_tuple[1]
+
+            # Initialize with corresponding imputer value
+            imp = SimpleImputer(strategy='constant', fill_value= feature_replace_value)
+
+            # Fit in the corresponding feature
+            imp.fit(X[[feature_name]])
+
+            # Update with imputer dictionary
+            self.imputers.update({
+
+                    feature_name: imp
+
+            })
+
+        return self  
+
+
     def transform(self, X, y=None):
         
         print("Start - CatImputer")
         
-        FILL_VALUE = 1
-        FEATURE = 0
-        X_imp = X
-        for feat in self.features_limits:
-            imp = SimpleImputer(strategy='constant', fill_value= feat[FILL_VALUE])
-            X_imp = imp.fit_transform(X_imp)
+
+        # For each feature to be imputer
+        for feat_tuple in self.features_limits:
+            
+            # Retrieve its name
+            feature_name = feat_tuple[0]
+            # Retrieve its fitted imputer
+            imp = self.imputers[feature_name]
+            # Transform
+            X[[feature_name]] = imp.transform(X[[feature_name]])
         
         print("End - CatImputer")
         
-        return pd.DataFrame(X_imp, columns = X.columns)
+        return X
     
-    def fit(self, X):
-        return self  
     
 
 
@@ -494,6 +529,9 @@ class CatImputer(BaseEstimator, TransformerMixin):
 class NumImputer(BaseEstimator, TransformerMixin):
     def __init__(self, value):
         self.value = value
+
+    def fit(self, X):  
+        return self
     
     def transform(self, X, y=None):
         
@@ -506,11 +544,7 @@ class NumImputer(BaseEstimator, TransformerMixin):
         print("End - FeaturesImputer")
     
         return X
-    
-    def fit(self, X):
-        
-        
-        return self
+
     
     
 
@@ -529,6 +563,10 @@ class TypeConversionTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, feature_to_type_list):
         self.feature_to_type_list = feature_to_type_list
     
+    
+    def fit(self, X):
+        return self
+
     def transform(self, X, y=None):
     
         
@@ -543,11 +581,6 @@ class TypeConversionTransformer(BaseEstimator, TransformerMixin):
     
         
         return X
-    
-    def fit(self, X):
-        
-        
-        return self
     
 
 
@@ -566,26 +599,54 @@ class FeatureEncoding(BaseEstimator, TransformerMixin):
     def __init__(self, features_list):
         self.features_list = features_list
     
+        #One-Hot-Encoder
+        self.onehote_encoders = {}
+        
+    def fit(self, X):
+
+        # For each feature, adds the corresponding encoder and encoded features' name in the dict
+        for feature in self.features_list:  
+
+            # Initialize current encoder
+            an_encoder = OneHotEncoder(sparse_output = False, feature_name_combiner='concat')
+            # Fit
+            an_encoder.fit(X[[feature]])
+            # Extract column names
+            encoded_str = [str(x) for x in an_encoder.get_feature_names_out()]
+
+            # Save current feature encoder in the dict
+            self.onehote_encoders.update(
+                {
+                    feature : {
+                        "encoder": an_encoder,
+                        "encoded_str": encoded_str 
+                    }
+                }
+            )
+            
+        return self
+
+
     def transform(self, X, y=None):
     
         
         print("Start - FeatureEncoding")
-        
-        for feature in self.features_list:    
-            ## Encode here
 
-            onehote_encoder = OneHotEncoder(sparse_output = False, feature_name_combiner='concat')
-            series_onehot = onehote_encoder.fit_transform(X[[feature]])
-            encoded_str = [str(x) for x in onehote_encoder.categories_[0]]
-            X[encoded_str] = series_onehot
-            X = X.drop(feature, axis = 1)
-        
+        # For each feature to be encoded
+        for feature in self.features_list:
+            # Encoder from the corresponding feature
+            for key, feature_encoder in self.onehote_encoders.items():    
+
+                # Transform
+                series_onehot = feature_encoder["encoder"].transform(X[[feature]])
+
+                # Create new feature in the dataset
+                X[feature_encoder["encoded_str"]] = series_onehot
+
+                # Drop original feture
+                X = X.drop(feature, axis = 1)
+            
         print("End - FeatureEncoding")
         
     
         return X
-    
-    def fit(self, X):
-        
-        
-        return self

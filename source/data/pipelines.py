@@ -61,7 +61,7 @@ data_cleaning_pipeline = Pipeline([
     #Imputers
     ("num_imputer", NumImputer(value = 0)),
     ("cat_imputer", CatImputer(
-                            features_limits = [("bathroom_text", "Private bath"),
+                            features_limits = [("bathrooms_text", "Private bath"),
                                                ("description", ""),
                                               ])),
     #Outliers
