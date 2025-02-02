@@ -6,12 +6,24 @@ import folium
 from streamlit_folium import st_folium
 from folium.plugins import Draw
 
+from ..source.data import pipelines
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler
 
+import regex as re
+    
 def map():
 
     st.subheader("1) Click on the location on the map: ")
 
     marker_location = [-22.970294234, -43.18559545]
+    
+    # Default value
+    if("longitude" not in st.session_state["model_input"]):
+        st.session_state["model_input"].update({
+                "longitude": -43.18559545,
+                "latitude": -43.18559545
+            })
     
     m = folium.Map(location= marker_location, zoom_start=15)
 
@@ -31,7 +43,13 @@ def map():
         latitude = click_location["last_clicked"]["lat"]
         longitude = click_location["last_clicked"]["lng"]
         st.session_state['marker_location'] = [latitude, longitude]
-        #marker_location = [latitude, longitude]
+
+        #Update longitude and latitude
+        if "model_input" in st.session_state:
+            st.session_state["model_input"].update({
+                "longitude": longitude,
+                "latitude": latitude
+            })
         st.rerun()
 
     st.caption(f"Location coordinates: {marker_location}")
@@ -58,18 +76,57 @@ def has_item():
 
     col1, col2, col3 = st.columns(3)
 
+
+    chk_var = {}
+
     with col1:
         for ind in range(0,4):
-             st.checkbox(amenities[ind][0], key = amenities[ind][1])
+             chk_var.update(
+                 {
+                  amenities[ind][1] : st.checkbox(amenities[ind][0])
+                  })
 
     with col2:
         for ind in range(4,8):
-             st.checkbox(amenities[ind][0], key = amenities[ind][1])
+             chk_var.update(
+                 {
+                  amenities[ind][1] : st.checkbox(amenities[ind][0])
+                  })
 
     with col3:
         for ind in range(8,12):
-             st.checkbox(amenities[ind][0], key = amenities[ind][1])
+             chk_var.update(
+                 {
+                  amenities[ind][1] : st.checkbox(amenities[ind][0])
+                  })
+
+    for feature, var in chk_var.items():
+        is_checked = 1 if var else 0
+        st.session_state["model_input"].update({feature:is_checked})
     
+
+
+def is_Checked():
+    pass
+
+
+def update_total_value(feature_name, value, type = "int"):
+
+    # Detect the "+" character for (10+, 5+, etc...)
+    plus_pattern = ".*\+"
+
+    if(type == "int"):
+        if(value != ""):
+            total = 0
+            if(re.match(plus_pattern, str(value))):
+                total = int(value[:-1])
+            else:
+                total = int(value)
+
+            st.session_state["model_input"].update({feature_name: total})
+    elif(type == "float"):
+        st.session_state["model_input"].update({feature_name: value})
+
 
 
 def capacity():
@@ -83,15 +140,23 @@ def capacity():
             "Number of Guests: ",
             ([str(x) for x in range(1,10)] + ["10+"]),
         )
-        bathroom = st.selectbox(
+        update_total_value("accommodates", accommodates)
+        
+        bathrooms = st.selectbox(
             "Number of Bathrooms: ",
             ([str(x) for x in range(0,5)]+ ["5+"]),
         )
+        update_total_value("bathrooms", bathrooms)
+
+
         bathroom_shared = st.radio(
             "Is bathroom shared?*",
             ["Yes", "No"],
             index=None,
         )
+
+        st.session_state["model_input"].update({"is_bathroom_shared" : 1 if bathroom_shared == "Yes" else 0})
+
         st.caption("_*Shared with someone strange to guest's party._")
 
     with col2:
@@ -99,10 +164,13 @@ def capacity():
             "Number of Beds: ",
             ([str(x) for x in range(0,8)] + ["8+"]),
         )
+        update_total_value("beds", beds)
+
         bedrooms = st.selectbox(
             "Number of Bedrooms: ",
             ([str(x) for x in range(0,5)] + ["5+"]),
         )
+        update_total_value("bedrooms", bedrooms)
 
        
 
@@ -110,39 +178,53 @@ def property_type():
 
     st.subheader("4) Select the property type: ")
 
-    property__type = st.radio(
+    property_type = st.radio(
             "Property Type ?",
             ["Entire Property", "Private Room", "Shared Room"],
             index=None,
 )
 
+    st.session_state["model_input"].update({
+
+                    "Entire home/apt" : 1 if property_type == "Entire Property" else 0,
+                    "Private room" :  1 if property_type == "Private Room" else 0,
+                    "Shared room":  1 if property_type == "Shared Room" else 0,
+    })
+
+
 def number_of_nights():
 
     st.subheader("5) Number of Nights: ")
 
-    number_of_nights = st.number_input(
-    "Number of nights aavailable in the year : ", min_value = 1, max_value = 356, value=None, placeholder="Type available nights in a year..."
+    availability_365 = st.number_input(
+    "Number of nights available in the year : ", min_value = 1, max_value = 356, value=1, placeholder="Type available nights in a year..."
 )
+    update_total_value("availability_365", availability_365)
 
-    st.selectbox(
+    minimum_nights_avg_ntm = st.selectbox(
             "Minimum nights: ",
             ([str(x) for x in range(1,7)] + ["7+"]),
         )
+    update_total_value("minimum_nights_avg_ntm", minimum_nights_avg_ntm)
 
 def reviews():
      st.subheader("6) Reviews: ")
 
-     numnumber_of_reviews = st.number_input(
-    "Number of reviews in the last 12 months : ", min_value = 0, value=None, placeholder="Type number of reviews in the last 12 months..."
+     numnumber_of_reviews_ltm = st.number_input(
+    "Number of reviews in the last 12 months : ", min_value = 0, value=0, placeholder="Type the number of reviews in the last 12 months..."
 )
+     update_total_value("number_of_reviews_ltm", numnumber_of_reviews_ltm)
      
      reviews_per_month = st.number_input(
-    "Rate of reviews per month : ", min_value = 0.0, value=None, placeholder="Type the rate of reviews per month..."
+    "Rate of reviews per month : ", min_value = 0.0, value=0.0, placeholder="Type the rate of reviews per month..."
 )
+     update_total_value("reviews_per_month", reviews_per_month, "float")
      
      review_score_location = st.number_input(
-    "Review Location Score : ", min_value = 0.0, max_value = 5.0, value=None, placeholder="Type the review score for the location..."
+    "Review Location Score : ", min_value = 0.0, max_value = 5.0, value=0.0, placeholder="Type the review score for the location..."
      )
+
+     update_total_value("review_score_location", review_score_location, "float")
 
 
      
@@ -153,12 +235,25 @@ def description():
         height = 200,
     )
 
+    st.session_state["model_input"].update(
+        {"contains_lux_description": text_area}
+    )
 
-def main():
+
+def main(model):
 
     st.title("Rio rental price predictor")
 
+    model_input = {}
+
+    if "model_input" not in st.session_state:
+        st.session_state["model_input"] = model_input
+
     map()
+
+    if "model_input" in st.session_state:
+        print(st.session_state["model_input"])
+
     has_item()
     capacity()
     property_type()
@@ -166,19 +261,61 @@ def main():
     reviews()
     description()
     
+    # Model Input
+    df_model_input = pd.DataFrame(st.session_state["model_input"], index = ["features"]).T
+    predicted_price = 0.0
 
+    # Buttons to run the model or reset
     col1, col2 = st.columns(2)
 
-    with col1:  
-        st.button("Predict Rental Price", type="primary", use_container_width=True)
-    with col2:
-        st.button("Reset", type="secondary")
+    # Predict final price
+    if col1.button("Predict Rental Price", type="primary", use_container_width=True):
+        # Pre-process data pipeline
+        preprocess_data = Pipeline([
+            ('num_feat_extraction_pipeline_app', pipelines.num_feat_extraction_pipeline_app),
+            ('cat_feat_extraction_pipeline_app', pipelines.cat_feat_extraction_pipeline_app)
+            ("normalisation", MinMaxScaler()),   
+        ])
+        X = preprocess_data.fit_transform(df_model_input)
 
+        # Model prediction
+        predicted_price = model.predict(X)
     
+    # Reset all input
+    if col2.button("Reset", type="secondary"):
+        # TO-DO
+        pass
+
+
+    # Display the price
     st.header("Predicted Price")
-    st.metric(label = "", value = f"R$0.00")
+    st.metric(label = "predicted price", value = f"R${predicted_price}")
+
+
+    # Display the dataframe used in the model
+    col1, col2, col3 = st.columns(3)
+
+
+    with col1:
+        st.dataframe(df_model_input.iloc[0:9, :])
+    with col2:
+        st.dataframe(df_model_input.iloc[9:19, :])
+    with col3:
+        st.dataframe(df_model_input.iloc[19:, :])
+
+    print(df_model_input)
+
+    '''
+    # OneHot
+    # Normalisation
+    ("normalisation", MinMaxScaler()),
+    '''
     
 
 
 if __name__ == "__main__":
-    main()
+    
+    model = joblib.load("../models/model.joblib")
+
+
+    main(model)

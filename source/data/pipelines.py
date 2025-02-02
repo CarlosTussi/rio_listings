@@ -19,6 +19,34 @@ num_feat_extraction_pipeline = Pipeline([
 
 
 '''
+num_feat_extraction_pipeline_app = Pipeline([
+    ("clusterlocation", ClusterGeolocationTransformer(clusters = 25, init = "random", n_init = 15, max_iter = 1000)),
+])
+
+
+'''
+    *  *
+
+
+'''
+cat_feat_extraction_pipeline_app = Pipeline([
+    #Removes capital letters, ponctuation, etc...
+    ("preprocesstext", PreprocessCorpus("description")),
+     #Creates a new feature based on lux words
+    ("extractluxdescription", ContainWordsTransformer(new_feature_name = "contains_lux_description", 
+                                               corpus_target = "description",
+                                               words = ["lux","luxurious","luxury","fancy","garage", 
+                                                  "hydromassage", "cellar", "sophistication", 
+                                                  "magnificent", "colonial", "rooftop", "triplex", "suite"])), 
+])
+
+
+
+'''
+    *  *
+
+
+'''
 cat_feat_extraction_pipeline = Pipeline([
     #Removes capital letters, ponctuation, etc...
     ("preprocesstext", PreprocessCorpus("description")),
