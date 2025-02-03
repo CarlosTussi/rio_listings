@@ -1,3 +1,10 @@
+'''
+How to run (Windows):
+
+python -m training.main
+
+'''
+
 import pandas as pd
 import numpy as np
 

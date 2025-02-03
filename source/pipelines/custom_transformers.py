@@ -656,6 +656,35 @@ class FeatureEncoding(BaseEstimator, TransformerMixin):
     
         return X
     
+
+class GeoClusterPredict(BaseEstimator, TransformerMixin):
+    def __init__(self, model):
+        self.model = model
+    
+    def fit(self, X):
+        return self
+
+    def transform(self, X, y=None):
+        
+        print("Start - GeoClusterPredict")
+        
+        
+       # Predict geo-clusyter model
+
+        cluster = self.model.predict(X.loc[:,["latitude", "longitude"]])[0]
+        X["geo_cluster"] = cluster
+
+        # One hot-encode representation (manually encoding all 25 categories) and indicate the cluster which current geo-cluster number belongs to
+        for i in range(0,25):
+            X["geo_cluster_"+str(i)] = 0
+        X["geo_cluster_"+str(cluster)] = 1
+        X = X.drop(["latitude", "longitude", "geo_cluster"], axis = 1)
+    
+        print("End - GeoClusterPredict")
+        
+        
+        return X
+
 class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.minmax = MinMaxScaler()
@@ -673,6 +702,32 @@ class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
         X = self.minmax.transform(X)
     
         print("End - CustomMinMaxScaler")
+        
+        
+        return X
+
+class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, model):
+        self.model = model
+        self.columns_order = None
+    
+    def fit(self, X):
+        self.columns_order = self.model.feature_names_in_
+        return self
+
+    def transform(self, X, y=None):
+        
+        print("Start - CustomMinMaxScalerAppTransformer")
+        
+        
+        # Reordering to transofrm with the normaliser (MaxMin required the same order)
+        X_normalise = pd.DataFrame()
+        for col in self.columns_order:
+            X_normalise[col] = X[col]
+
+        X = self.model.transform(X_normalise)
+    
+        print("End - CustomMinMaxScalerAppTransformer")
         
         
         return X

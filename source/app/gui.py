@@ -2,18 +2,18 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
+
 import folium
 from streamlit_folium import st_folium
-from folium.plugins import Draw
 
-from pipelines import pipelines
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
+from app.processing_predict import process_and_predict
 
 import regex as re
-    
-def map():
+
+'''
+map
+'''
+def map_component():
 
     st.subheader("1) Click on the location on the map: ")
 
@@ -28,18 +28,20 @@ def map():
     
     m = folium.Map(location= marker_location, zoom_start=15)
 
+    # If state variable already exists, updates current marker location
     if 'marker_location' in st.session_state:
         marker_location = st.session_state['marker_location']
         folium.Marker(marker_location).add_to(m)
         m.location = marker_location
+    #If state variable does not exists, create it and update marker location
     else:
-        marker_location = marker_location 
         st.session_state['marker_location'] = marker_location
         folium.Marker(marker_location).add_to(m)
 
-    
+    # Retrieves user lick location
     click_location = st_folium(m, height=300, width=550)
 
+    # Updated coordinates of user's click location
     if click_location and click_location["last_clicked"]:
         latitude = click_location["last_clicked"]["lat"]
         longitude = click_location["last_clicked"]["lng"]
@@ -51,12 +53,15 @@ def map():
                 "longitude": longitude,
                 "latitude": latitude
             })
+        # Force the display of the updated marker
         st.rerun()
 
     st.caption(f"Location coordinates: {marker_location}")
 
-
-def has_item():
+'''
+amenities
+'''
+def has_item_component():
     
     amenities = [
                 ("Parking", "has_parking"), 
@@ -75,9 +80,8 @@ def has_item():
 
     st.subheader("2) Select the presence of any of these amenities: ")
 
+    # Divide the amenitites in 3 columns for beetter visualisation
     col1, col2, col3 = st.columns(3)
-
-
     chk_var = {}
 
     with col1:
@@ -101,16 +105,15 @@ def has_item():
                   amenities[ind][1] : st.checkbox(amenities[ind][0])
                   })
 
+    # Update the model input data dictionary with the amenitites selected by the user
     for feature, var in chk_var.items():
         is_checked = 1 if var else 0
         st.session_state["model_input"].update({feature:is_checked})
     
 
+'''
 
-def is_Checked():
-    pass
-
-
+'''
 def update_total_value(feature_name, value, type = "int"):
 
     # Detect the "+" character for (10+, 5+, etc...)
@@ -129,8 +132,14 @@ def update_total_value(feature_name, value, type = "int"):
         st.session_state["model_input"].update({feature_name: value})
 
 
-
-def capacity():
+'''
+accommodates
+bathrooms
+is_bathroom_shared
+beds
+bedrooms
+'''
+def capacity_component():
     st.subheader("3) Select the maximum capacities: ")
 
 
@@ -152,9 +161,12 @@ def capacity():
 
         bathroom_shared = st.radio(
             "Is bathroom shared?*",
-            ["Yes", "No"],
-            index=None,
+            ["No", "Yes"],
         )
+        
+        # Will force the the first element to be pre-selected
+        if bathroom_shared == "No":
+            pass
 
         st.session_state["model_input"].update({"is_bathroom_shared" : 1 if bathroom_shared == "Yes" else 0})
 
@@ -174,16 +186,21 @@ def capacity():
         update_total_value("bedrooms", bedrooms)
 
        
-
-def property_type():
+'''
+property_type
+'''
+def property_type_component():
 
     st.subheader("4) Select the property type: ")
 
     property_type = st.radio(
             "Property Type ?",
             ["Entire Property", "Private Room", "Shared Room"],
-            index=None,
 )
+    
+    # Will force the the first element to be pre-selected
+    if property_type == "Entire Property":
+        pass
 
     st.session_state["model_input"].update({
 
@@ -192,8 +209,11 @@ def property_type():
                     "room_type_Shared room":  1 if property_type == "Shared Room" else 0,
     })
 
-
-def number_of_nights():
+'''
+availability_365
+minimum_nights_avg_ntm
+'''
+def number_of_nights_component():
 
     st.subheader("5) Number of Nights: ")
 
@@ -208,7 +228,12 @@ def number_of_nights():
         )
     update_total_value("minimum_nights_avg_ntm", minimum_nights_avg_ntm)
 
-def reviews():
+'''
+numnumber_of_reviews_ltm
+reviews_per_month
+review_scores_location
+'''
+def reviews_component():
     st.subheader("6) Reviews: ")
 
     numnumber_of_reviews_ltm = st.number_input(
@@ -233,7 +258,7 @@ def reviews():
 
 
      
-def description():
+def description_component():
     text_area = st.text_area(
         "Property description",
         placeholder="Property description in english",
@@ -245,79 +270,37 @@ def description():
     )
 
 
-def main(model, geo_cluster_model, normaliser_model):
 
-    st.title("Rio rental price predictor")
-
-    model_input = {}
-
-    if "model_input" not in st.session_state:
-        st.session_state["model_input"] = model_input
-
-    map()
-
-    if "model_input" in st.session_state:
-        print(st.session_state["model_input"])
-
-    has_item()
-    capacity()
-    property_type()
-    number_of_nights()
-    reviews()
-    description()
-    
-    # Model Input
-    df_model_input = pd.DataFrame(st.session_state["model_input"], index = ["features"])
-    predicted_price = 0.0
-
-    df_display = df_model_input.copy().T
+def buttons_component(model, geo_cluster_model, normaliser_model, df_model_input):
 
     # Buttons to run the model or reset
     col1, col2 = st.columns(2)
 
     # Predict final price
     if col1.button("Predict Rental Price", type="primary", use_container_width=True):
-        # Pre-process data pipeline
-        preprocess_data = Pipeline([
-            ('cat_feat_extraction_pipeline_app', pipelines.cat_feat_extraction_pipeline_app),  
-        ])
+        
+        ###################
+        # Preprocess Data #
+        ###################
+        predicted_price = process_and_predict(df_model_input, model, geo_cluster_model, normaliser_model)
 
-        # Predict geo-clusyter model
-
-        cluster = geo_cluster_model.predict(df_model_input.loc[:,["latitude", "longitude"]])[0]
-        df_model_input["geo_cluster"] = cluster
-
-        # One hot-encode representation (manually encoding all 25 categories) and indicate the cluster which current geo-cluster number belongs to
-        for i in range(0,25):
-            df_model_input["geo_cluster_"+str(i)] = 0
-        df_model_input["geo_cluster_"+str(cluster)] = 1
-        df_model_input = df_model_input.drop(["latitude", "longitude", "geo_cluster"], axis = 1)
-
-        X = preprocess_data.fit_transform(df_model_input)
-
-
-        # Reordering to transofrm with the normaliser (MaxMin required the same order)
-        X_normalise = pd.DataFrame()
-        for col in normaliser_model.feature_names_in_:
-            X_normalise[col] = X[col]
-
-        X = normaliser_model.transform(X_normalise)
-
-
-        # Model prediction
-        predicted_price = model.predict(X)
-
-        # Display the price
+        #####################
+        # Display the price #
+        #####################
         st.header("Predicted Price")
-        st.metric(label = " ", value = f"R${predicted_price[0]:.2f}")
+        st.metric(label = " ", value = f"R${predicted_price:.2f}")
     
+
     # Reset all input
     if col2.button("Reset", type="secondary"):
-        # TO-DO
+        #TO-DO
         pass
 
 
+'''
 
+'''
+def df_component(df_display):
     # Display the dataframe used in the model
     col1, col2, col3 = st.columns(3)
 
@@ -329,14 +312,42 @@ def main(model, geo_cluster_model, normaliser_model):
     with col3:
         st.dataframe(df_display.iloc[19:, :])
 
-    #print(df_model_input)
+'''
+
+'''
+def gui(model, geo_cluster_model, normaliser_model):
+
+    # State variable that will contain user's input
+    model_input = {}
+    if "model_input" not in st.session_state:
+        st.session_state["model_input"] = model_input
+
+
+    #################
+    # PROJECT TITLE #
+    #################
+    st.title("Rio rental price predictor")
+
+
+    #########################
+    # INTERFACE COMPONENTES #
+    #########################
+    map_component()
+    has_item_component()
+    capacity_component()
+    property_type_component()
+    number_of_nights_component()
+    reviews_component()
+    description_component()
+
+    # Model Input as a Data Frame
+    df_model_input = pd.DataFrame(st.session_state["model_input"], index = ["features"])
+    buttons_component(model, geo_cluster_model, normaliser_model, df_model_input)
+
+    # Data frame that will be display to the user before its transformations
+    df_display = df_model_input.copy().T
+    df_component(df_display)
+
+
+
     
-
-
-if __name__ == "__main__":
-    
-    model = joblib.load("../models/price_model.joblib")
-    geo_cluster_model = joblib.load("../models/geo_kmeans_model.joblib")
-    normaliser_model = joblib.load("../models/normaliser_model.joblib")
-
-    main(model, geo_cluster_model, normaliser_model)
