@@ -3,8 +3,8 @@ import numpy as np
 
 import joblib
 
-import data.preprocess as pre
-import models.model as mdl
+import training.data_preprocess as pre
+import training.model_training_evaluation as mdl
 
 
 from sklearn.model_selection import train_test_split
@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 if __name__ == "__main__":
 
     # Read the data
-    df = pd.read_csv("../Data/listings.csv", sep = ",")
+    df = pd.read_csv("../data/listings.csv", sep = ",")
 
     # Preprocess Data Piepline
     X, y = pre.preprocess(df, target = "price")
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     print(results)
 
     # Save Model
-    joblib.dump(model, 'model.joblib')
+    joblib.dump(model, '../models/price_model.joblib')

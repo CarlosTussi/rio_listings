@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
 
-from data.pipelines import preprocess_pipeline
+
+from pipelines.pipelines import preprocess_pipeline
 
 '''
 def preprocess_pipeline_preparation(df : pd.DataFrame, target : str) -> tuple
@@ -22,6 +22,7 @@ def preprocess_pipeline_preparation(df : pd.DataFrame, target : str) -> tuple
 
 '''
 def preprocess_pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
+
     # Dropping 'na' for prices
     df = df.dropna(subset = target)
 

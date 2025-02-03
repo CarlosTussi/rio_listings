@@ -2,7 +2,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 
-from data.pipeline_classes import *
+from pipelines.custom_transformers import *
 
 '''
     *  *
@@ -139,5 +139,5 @@ preprocess_pipeline = Pipeline([
         ('columndrop', ColumnDroppersTransformer()), 
 
         #Normalisation
-        ("normalisation", MinMaxScaler()),    
+        ("normalisation", CustomMinMaxScaler()),    
 ])

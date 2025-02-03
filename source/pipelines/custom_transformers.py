@@ -10,9 +10,11 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.cluster import KMeans
 
 
-from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import MinMaxScaler
+
+import joblib
 
 
 '''
@@ -191,6 +193,9 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
         self.k_means.fit(df_kmeans)
         #Clusters as a feature
         X['geo_cluster'] = self.k_means.labels_ 
+
+        # Save the model
+        joblib.dump(self.k_means, '../models/geo_kmeans_model.joblib')
 
 
         # Onde-Hot-Encoder
@@ -649,4 +654,25 @@ class FeatureEncoding(BaseEstimator, TransformerMixin):
         print("End - FeatureEncoding")
         
     
+        return X
+    
+class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        self.minmax = MinMaxScaler()
+    
+    def fit(self, X):
+        self.minmax.fit(X)
+        joblib.dump(self.minmax, "../models/normaliser_model.joblib")
+        return self
+
+    def transform(self, X, y=None):
+        
+        print("Start - CustomMinMaxScaler")
+        
+        
+        X = self.minmax.transform(X)
+    
+        print("End - CustomMinMaxScaler")
+        
+        
         return X
