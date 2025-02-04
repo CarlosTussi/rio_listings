@@ -1002,7 +1002,7 @@ class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
         for col in self.columns_order:
             X_scaler[col] = X[col]
 
-        X = self.transf_model.transform(X_scaler)
+        X = self.model.transform(X_scaler)
     
         print("End - CustomMinMaxScalerAppTransformer")
         

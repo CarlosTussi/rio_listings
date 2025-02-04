@@ -333,7 +333,7 @@ def description_component():
 
 
 '''
-    def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input)
+    def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_model, df_model_input)
     ------------------------------------------------------------------------------------------------------
 
     - This components initiates the data transformation and price prediction.
@@ -342,7 +342,7 @@ def description_component():
     - Input:
       ******
         - price_pred_model : HistGradientBoostingRegressor()    # Trained model
-        - geo_cluster_transf_model : KMeans()                   # Trained model
+        - geo_cluster_pred_model : KMeans()                     # Trained model
         - scaler_transf_model : MaxMinScaler()                  # Trained model
         - df_model_input : pd.DataFrame
 
@@ -351,7 +351,7 @@ def description_component():
 
 
 '''
-def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input):
+def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_model, df_model_input):
 
     # Buttons to run the model or reset
     col1, col2 = st.columns(2)
@@ -362,7 +362,7 @@ def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_
         ###################
         # Preprocess Data #
         ###################
-        predicted_price = process_and_predict(df_model_input, price_pred_model, geo_cluster_transf_model, scaler_transf_model)
+        predicted_price = process_and_predict(df_model_input, price_pred_model, geo_cluster_pred_model, scaler_transf_model)
 
         #####################
         # Display the price #
@@ -401,19 +401,19 @@ def df_component(df_display):
         st.dataframe(df_display.iloc[20:, :])
 
 '''
-    def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model)
+    def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model)
 
     - Centralizes all the componentes in order of appearance for the user.
 
     - Input:
       *****
         - price_pred_model : HistGradientBoostingRegressor()    # Trained model
-        - geo_cluster_transf_model : KMeans()                   # Trained model
+        - geo_cluster_pred_model : KMeans()                     # Trained model
         - scaler_transf_model : MaxMinScaler()                  # Trained model    
 
 
 '''
-def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model):
+def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model):
 
     # State variable that will contain user's input
     model_input = {}
@@ -440,7 +440,7 @@ def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model):
 
     # Model Input as a Data Frame
     df_model_input = pd.DataFrame(st.session_state["model_input"], index = ["features"])
-    buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input)
+    buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_model, df_model_input)
 
     # Data frame that will be display to the user before its transformations
     df_display = df_model_input.copy().T

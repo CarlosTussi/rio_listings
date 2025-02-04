@@ -95,7 +95,7 @@ TRAINING_DATA_PATH = 'data/listings.csv'
 MAIN_PRED_MODEL_PATH = 'models/price_pred_model.joblib'
 
 # Geo-cluster kmeans model filepath
-GEO_CLUSTER_MODEL_PATH = 'models/geo_kmeans_transf_model.joblib'
+GEO_CLUSTER_MODEL_PATH = 'models/geo_kmeans_pred_model.joblib'
 
 # Scaler model filepath
 SCALER_MODEL_PATH = 'models/scaler_transf_model.joblib'
