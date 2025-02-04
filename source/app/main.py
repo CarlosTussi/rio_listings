@@ -20,15 +20,15 @@ if __name__ == "__main__":
     # LOAD MODELS #
     ###############
     # Main price prediction model
-    model = joblib.load(MAIN_PRED_MODEL_PATH)
+    price_pred_model = joblib.load(MAIN_PRED_MODEL_PATH)
 
     # Cluster model for coordinates
-    geo_cluster_model = joblib.load(GEO_CLUSTER_MODEL_PATH)
+    geo_cluster_transf_model = joblib.load(GEO_CLUSTER_MODEL_PATH)
 
     # Data Normalisation model
-    normaliser_model = joblib.load(NORM_MODEL_PATH)
+    scaler_transf_model = joblib.load(SCALER_MODEL_PATH)
 
     #######
     # GUI #
     #######
-    gui(model, geo_cluster_model, normaliser_model)
+    gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model)

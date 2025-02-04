@@ -116,6 +116,6 @@ preprocess_pipeline = Pipeline([
         # Feature Selection
         ('columndrop', ColumnDroppersTransformer()), 
 
-        #Normalisation
-        ("normalisation", CustomMinMaxScaler()),    
+        # Scaling
+        ("scaler", CustomMinMaxScaler()),    
 ])

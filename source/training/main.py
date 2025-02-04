@@ -33,13 +33,13 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 70)
 
     # Model Training
-    model = mdl.model_training(X_train, y_train)
+    price_pred_model = mdl.model_training(X_train, y_train)
 
 
     # Model Evaluation
-    results = mdl.model_evaluation(model, X_test, y_test)
+    results = mdl.model_evaluation(price_pred_model, X_test, y_test)
 
     print(results)
 
     # Save Model
-    joblib.dump(model, MAIN_PRED_MODEL_PATH)
+    joblib.dump(price_pred_model, MAIN_PRED_MODEL_PATH)

@@ -687,7 +687,7 @@ class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
     
     def fit(self, X):
         self.minmax.fit(X)
-        joblib.dump(self.minmax, NORM_MODEL_PATH)
+        joblib.dump(self.minmax, SCALER_MODEL_PATH)
         return self
 
     def transform(self, X, y=None):
@@ -703,12 +703,12 @@ class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
         return X
 
 class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, transf_model):
+        self.transf_model = transf_model
         self.columns_order = None
     
     def fit(self, X):
-        self.columns_order = self.model.feature_names_in_
+        self.columns_order = self.transf_model.feature_names_in_
         return self
 
     def transform(self, X, y=None):
@@ -716,12 +716,12 @@ class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
         print("Start - CustomMinMaxScalerAppTransformer")
         
         
-        # Reordering to transofrm with the normaliser (MaxMin required the same order)
-        X_normalise = pd.DataFrame()
+        # Reordering to transofrm with the scaler (MaxMin required the same order)
+        X_scaler = pd.DataFrame()
         for col in self.columns_order:
-            X_normalise[col] = X[col]
+            X_scaler[col] = X[col]
 
-        X = self.model.transform(X_normalise)
+        X = self.transf_model.transform(X_scaler)
     
         print("End - CustomMinMaxScalerAppTransformer")
         

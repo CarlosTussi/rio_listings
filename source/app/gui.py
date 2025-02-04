@@ -260,7 +260,7 @@ def description_component():
 
 
 
-def buttons_component(model, geo_cluster_model, normaliser_model, df_model_input):
+def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input):
 
     # Buttons to run the model or reset
     col1, col2 = st.columns(2)
@@ -271,7 +271,7 @@ def buttons_component(model, geo_cluster_model, normaliser_model, df_model_input
         ###################
         # Preprocess Data #
         ###################
-        predicted_price = process_and_predict(df_model_input, model, geo_cluster_model, normaliser_model)
+        predicted_price = process_and_predict(df_model_input, price_pred_model, geo_cluster_transf_model, scaler_transf_model)
 
         #####################
         # Display the price #
@@ -304,7 +304,7 @@ def df_component(df_display):
 '''
 
 '''
-def gui(model, geo_cluster_model, normaliser_model):
+def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model):
 
     # State variable that will contain user's input
     model_input = {}
@@ -318,9 +318,9 @@ def gui(model, geo_cluster_model, normaliser_model):
     st.title("Rio rental price predictor")
 
 
-    #########################
-    # INTERFACE COMPONENTES #
-    #########################
+    ########################
+    # INTERFACE COMPONENTS #
+    ########################
     map_component()
     has_item_component()
     capacity_component()
@@ -331,7 +331,7 @@ def gui(model, geo_cluster_model, normaliser_model):
 
     # Model Input as a Data Frame
     df_model_input = pd.DataFrame(st.session_state["model_input"], index = ["features"])
-    buttons_component(model, geo_cluster_model, normaliser_model, df_model_input)
+    buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input)
 
     # Data frame that will be display to the user before its transformations
     df_display = df_model_input.copy().T

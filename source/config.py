@@ -91,13 +91,13 @@ FEATURES_TO_DROP_REGEX = ".*host.*|.*id.*|.*url.*"
 TRAINING_DATA_PATH = 'data/listings.csv'
 
 # Main prediction model filepath
-MAIN_PRED_MODEL_PATH = 'models/price_model.joblib'
+MAIN_PRED_MODEL_PATH = 'models/price_pred_model.joblib'
 
 # Geo-cluster kmeans model filepath
-GEO_CLUSTER_MODEL_PATH = 'models/geo_kmeans_model.joblib'
+GEO_CLUSTER_MODEL_PATH = 'models/geo_kmeans_transf_model.joblib'
 
 # Scaler model filepath
-NORM_MODEL_PATH = 'models/normaliser_model.joblib'
+SCALER_MODEL_PATH = 'models/scaler_transf_model.joblib'
 
 
 

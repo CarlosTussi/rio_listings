@@ -41,9 +41,9 @@ def model_training(X_train, y_train):
        
 '''
 
-def model_evaluation(model, X_test, y_test):
+def model_evaluation(pred_model, X_test, y_test):
     
-    y_pred = model.predict(X_test)
+    y_pred = pred_model.predict(X_test)
 
 
     # Calclulate the score for the following metrics
