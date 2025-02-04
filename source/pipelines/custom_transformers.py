@@ -1,32 +1,45 @@
+'''
+
+    This module contains all the custom transformers implementation necessary for the pipeline.
+    Each custom transformer implements methos fit() and transforms().
+
+'''
+
+
 import pandas as pd
 import numpy as np
-
 import operator as op
 import re
-
-# Custom Transformers
 from sklearn.base import BaseEstimator, TransformerMixin
-
 from sklearn.cluster import KMeans
-
-
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
-
 from source.config import *
-
 import joblib
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
-                
-               
+        class ColumnDroppersTransformer(BaseEstimator, TransformerMixin)
+        ----------------------------------------------------------------
+
+            Description:
+            ************
+                - This transformer drops unwanted features from the dataset.
+        
+
+            Attributes:
+            ***********
+                - drop_feat : List
             
-            *:
+            Fit:
+            *****
+                - Populate the list of features that will be dropped.
+
+            Transform:
+            ************
+                - Drop features from the list.
+               
   
 '''
 class ColumnDroppersTransformer(BaseEstimator, TransformerMixin):
@@ -63,13 +76,24 @@ class ColumnDroppersTransformer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
-                
-               
+        class DropNasTransformer(BaseEstimator, TransformerMixin) 
+        ----------------------------------------------------------
+
+            Description:
+            ************
+                - Remove NAs from a list of features.
+        
+            Attributes:
+            ***********
+                - features : list
             
-            *:
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - Drop nas from the list
   
 '''
 class DropNasTransformer(BaseEstimator, TransformerMixin):
@@ -97,17 +121,58 @@ class DropNasTransformer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class OutlierRemover(BaseEstimator, TransformerMixin) 
+        ----------------------------------------------------
+            Description:
+            ************
+                - Remove outliers from different types following different conditions:
+                    - a <  x    ("lt")
+                    - a <= x    ("le")
+                    - a >  x    ("gt")
+                    - a >= x    ("ge")
+                    - a == x    ("eq")
+                    - a != x    ("ne")
                 
-               
-            
-            *:
+                - With different modes of operation:
+                    - "replace": replace value (a) that respect a condition above with another value (b)
+                    - "cap": cap value (a) that respect a condition above by assigned value (a)
+
+                - Example 1: Replace all values bigger than 10 for "feat_a" with 10 and values bigger than 5 for "feat_b" with 5.
+
+                        features_limit = [("feat_a", 10),
+                                          ("feat_b", 5)] 
+                        mode = "cap",
+                        operatore = "lt"
+
+                - Example 2: Replace all values that matches "Hotel Room" with string "Private Room".
+
+                    features_limit = [("feat_a", "Hotel Room", "Private Room")]
+                    mode = "replace",
+                    operator = "eq"
+
+                
+            Attributes:
+            ***********
+                - features_limit : list[
+                                        tuple(str, val_a),         #If only mode 'cap'
+                                        tuple(str, val_a, val_b)   #If only mode 'replace'
+                                        ]
+                - mode: str
+
+                - operator: str
+                                        
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - If mode 'cap', replace all values that do not satisify the limit with the limit.
+                - If mode 'replace', replace all values with some other value.
   
 '''
 class OutlierRemover(BaseEstimator, TransformerMixin):
-    def __init__(self, features_limit, mode = "remove", operator = "eq"): #st: smaller then
+    def __init__(self, features_limit, mode = "replace", operator = "eq"): #st: smaller then
                     
         self.opt_dict = {
         "lt":op.lt,
@@ -150,13 +215,35 @@ class OutlierRemover(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        Class ClusterGeolocationTransformers 
+        ------------------------------------
+            Description:
+            ************
+                - Responsable for separating a set of coordinates (latitude/longitude) into different clusters using
+                K-means method.
+                - It saves the transformer model trained on the data for future use.
+                - One-hot-encode the different clusters using One-Hot-Encoder
                 
-               
+            Attributes:
+            ***********
+                - clusters: int,                            # Number of clusters
+                - init: str,                                # Method for initialization for K-means algorithm
+                - n_init: str,                              # Number of times the k-means algorithm
+                - max_item: int                             # Max number of iteration of k-mean algorithm for each run
+                - k_means: Kmeans()                         # KMeans model
+                - onehot_encoder_cluster: OneHotEncoder()   # OneHoteEncoder encoder
             
-            *:
+            Fit:
+            *****
+                - Train KMeans on the dataset and retrieve the labels.
+                - Creates new feature ("geo_cluster") with the lables.
+                - Train OneHotEncoder with the new feature ("geo_cluster")
+                - Save the trained encoder for future use.
+
+            Transform:
+            **********
+                - OneHotEncode new feature ("geo_cluster").
+                - Drop features "latitude", "longitude" and "geo_cluster"
   
 '''
 class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
@@ -179,7 +266,7 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
         # Initialize the encoder
         self.onehot_encoder_cluster = OneHotEncoder(sparse_output = False, feature_name_combiner='concat')
 
-        
+
     def fit(self, X):
 
         #Select the data to be clustered
@@ -224,13 +311,24 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class PreprocessCorpus(BaseEstimator, TransformerMixin) 
+        -------------------------------------------------------
+
+            Description:
+            ************
+                - Preprocess some text with some predefined rules.
                 
-               
+            Attributes:
+            ***********
+                - corpus_feature: str
             
-            *:
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - Apply predefined rules transforming the text input.
   
 '''
 class PreprocessCorpus(BaseEstimator, TransformerMixin):
@@ -263,13 +361,27 @@ class PreprocessCorpus(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class ContainWordsTransformer(BaseEstimator, TransformerMixin) 
+        --------------------------------------------------------------
+
+            Description:
+            ************
+                - Creates a new feature that indicates weather some text contains some set of words or not.
                 
-               
+            Attributes:
+            ***********
+                - words: list(str)
+                - new_feature_name: str
+                - corpus_target: str
             
-            *:
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - Indicate if some text contains any of those words (1) or not (0) adding the result as a new columns.
+                - Drop original corpus_target feature
   
 '''
 class ContainWordsTransformer(BaseEstimator, TransformerMixin):
@@ -320,13 +432,31 @@ class ContainWordsTransformer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin) 
+        ------------------------------------------------------------------
+
+            Description:
+            ************
+                - Creates a new feature for each amenity being searched and populates it with 0 (not present) or 1 (present in the property)
+                - It accomplishes it by using regex to parse through the amenity's list text from the raw input data.
                 
-               
+            Attributes:
+            ***********
+                - amenities_dic: dict             # {amenity_name: [amenity_regex]}
+                    Example:
+                            {
+                                "bathtub": ".*bathtub.*",
+                                "seaview" : [".*beach view.*",".*sea view.*",".*ocean view.*"]
+                            }
             
-            *:
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - Identify the amenities and populate the new amenity's features.
+                - Drop the original amenities feature.
   
 '''
 class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin):
@@ -341,8 +471,25 @@ class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin):
         
         print("Start - ExtractAmenitiesTransformer")
         
-        #This function will check the presence of the amenities in the list using regex
+        '''
+            def convert_amenities(amenities, index):
+            ----------------------------------------
+                - This function verifies the existance using regex of the searched amenities in the current amenitites list from the property,
+                which is all concatenated in a large string of amenitites by default from the raw dataset.
+                - It creates a new feature for each target amenitiy being searched "has_(amenity)"
+                - For each amenity target identified, it indicated that it exists (1)
+
+                input:
+                ------
+                    - amenitites: str
+                    - index: int
+
+                output:
+                -------
+                    - None
+        '''
         def convert_amenities(amenities, index): 
+            # For each amenity target
             for amn_name, amn_re in self.amenities_dict.items():
                 if(isinstance(amn_re,list)):
                     # Check each reg from the list of reg for an specific amenity. Ex ("seaview" : [".*beach view.*",".*sea view.*",".*ocean view.*"])
@@ -353,6 +500,9 @@ class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin):
                     if(re.match(amn_re, str.lower(amenities))):
                         X.loc[index,"has_"+ amn_name] = 1
         
+
+
+
         # 1) Create and initalize the features from the amenities list
         has_amn_feat = ["has_" + x for x in self.amenities_dict.keys()]
         X[has_amn_feat] = 0
@@ -371,13 +521,24 @@ class ExtractAmenitiesTransformer(BaseEstimator, TransformerMixin):
     
    
 '''
-        Class 
-        ----------
-            *Attributes:
+        class ExtractBathroom(BaseEstimator, TransformerMixin) 
+        ------------------------------------------------------
+            Description:
+            ************
+                - Check if the bathroom is shared or not based on the text information available.
                 
-               
+            Attributes:
+            ***********
+                - None
             
-            *:
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - Creates a new feature that indicaates the presence  (1) or not (0) of a shared toilet.
+                - Drops the original text information of the bathrooms.
   
 '''   
 class ExtractBathroom(BaseEstimator, TransformerMixin):
@@ -424,13 +585,23 @@ class ExtractBathroom(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class ExtractScore(BaseEstimator, TransformerMixin)
+        ---------------------------------------------------
+            Description:
+            ************
+                - Creates a new feature that indicates weather property has not yet received any reviews for the location.
                 
-               
+            Attributes:
+            ***********
+                - None
             
-            *:
+            Fit:
+            *****
+                - None
+
+            Transform:
+            ************
+                - Creates a new feature that indicaates the presence  (0) or not (1) of a location review.
   
 '''
 class ExtractScore(BaseEstimator, TransformerMixin):
@@ -454,13 +625,30 @@ class ExtractScore(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class CatImputer(BaseEstimator, TransformerMixin) 
+        -------------------------------------------------
+                Description:
+                ************
+                    - For each feature to be imputed, train a SimpleImputer and impute with a value.
+                    
+                Attributes:
+                ***********
+                    - features_limits: list(tuple(str, str))
+
+                            - Exemple:
+                                 features_limits =  [("bathrooms_text", "Private bath"),
+                                                    ("description", "")]
+                                                    
                 
-               
-            
-            *:
+                
+                Fit:
+                *****
+                    - Fit a SimpleImputer with a replace value for each feature from the list.
+                    - Creates a dictionary with all the trained SimpleImputers
+
+                Transform:
+                ************
+                    - Impute the features from the list with their respective traineed imputers.
   
 '''
 class CatImputer(BaseEstimator, TransformerMixin):
@@ -518,13 +706,23 @@ class CatImputer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class NumImputer(BaseEstimator, TransformerMixin) 
+        --------------------------------------------------
+                Description:
+                ************
+                    - Impute all numerical features with a value.
+                    
+                Attributes:
+                ***********
+                    - value: numerical
                 
-               
-            
-            *:
+                Fit:
+                *****
+                    - None
+
+                Transform:
+                ************
+                    - Fill all NAs with a value.
   
 '''
 class NumImputer(BaseEstimator, TransformerMixin):
@@ -551,13 +749,23 @@ class NumImputer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class TypeConversionTransformer(BaseEstimator, TransformerMixin) 
+        -----------------------------------------------------------------
+                Description:
+                ************
+                    - Change a feature's type.
+                    
+                Attributes:
+                ***********
+                    - feature_to_type_list : list(tuple(str,dtype))
                 
-               
-            
-            *:
+                Fit:
+                *****
+                    - None
+
+                Transform:
+                ************
+                    - Convert the type for each (feature, dtype) tuple from the list.
   
 '''
 class TypeConversionTransformer(BaseEstimator, TransformerMixin):
@@ -587,13 +795,25 @@ class TypeConversionTransformer(BaseEstimator, TransformerMixin):
 
 
 '''
-        Class 
-        ----------
-            *Attributes:
+        class FeatureEncoding(BaseEstimator, TransformerMixin)
+        -------------------------------------------------------
+                Description:
+                ************
+                    - Encode each feature from the list.
+                    
+                Attributes:
+                ***********
+                    - features_list: list(str)
+                    - onehot_encoders: list(OneHotEncoder())
                 
-               
-            
-            *:
+                Fit:
+                *****
+                    - Train each encoder with each feature of the features_list and 
+                    add the trained encoder in a dictionary with respective feature.
+
+                Transform:
+                ************
+                    - Encode each feature with respective encoder and drop original feature.
   
 '''
 class FeatureEncoding(BaseEstimator, TransformerMixin):
@@ -652,7 +872,28 @@ class FeatureEncoding(BaseEstimator, TransformerMixin):
     
         return X
     
+'''
+        class GeoClusterPredict(BaseEstimator, TransformerMixin)
+        --------------------------------------------------------
+                Description:
+                ************
+                    - This class is mainly for an application where we need to make the input compliant with the price prediction model.
+                    - Will predict a cluster membership for a coordinate (latitude/longitude)
+                    
+                Attributes:
+                ***********
+                    - model : KMeans()      # Already trained
+                
+                Fit:
+                *****
+                    - None
 
+                Transform:
+                ************
+                    - Predict the clusted membership and create one-hot-encode features of all possible cluster categories to comply with 
+                    the price prediction model.
+                    - Drop latitude, longitude and geo_cluster.
+'''
 class GeoClusterPredict(BaseEstimator, TransformerMixin):
     def __init__(self, model):
         self.model = model
@@ -666,12 +907,11 @@ class GeoClusterPredict(BaseEstimator, TransformerMixin):
         
         
        # Predict geo-clusyter model
-
         cluster = self.model.predict(X.loc[:,["latitude", "longitude"]])[0]
         X["geo_cluster"] = cluster
 
-        # One hot-encode representation (manually encoding all 25 categories) and indicate the cluster which current geo-cluster number belongs to
-        for i in range(0,25):
+        # One hot-encode representation (manually encoding all NUMBER_OF_CLUSTERS_FT categories) and indicate the cluster which current geo-cluster number belongs to
+        for i in range(0, NUMBER_OF_CLUSTERS_FT):
             X["geo_cluster_"+str(i)] = 0
         X["geo_cluster_"+str(cluster)] = 1
         X = X.drop(["latitude", "longitude", "geo_cluster"], axis = 1)
@@ -681,6 +921,26 @@ class GeoClusterPredict(BaseEstimator, TransformerMixin):
         
         return X
 
+'''
+        class CustomMinMaxScaler(BaseEstimator, TransformerMixin)
+        ---------------------------------------------------------
+                Description:
+                ************
+                    - Augmented vrsion of MinMaxScaler where the trained model is saved to be used by other applications later.
+                    
+                Attributes:
+                ***********
+                    - minmax: MinMaxScaler()
+                
+                Fit:
+                *****
+                    - Train the model
+                    - Save the trained model
+
+                Transform:
+                ************
+                    - Scale the dataset
+'''
 class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.minmax = MinMaxScaler()
@@ -702,13 +962,34 @@ class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
         
         return X
 
+'''
+        class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin)
+        -----------------------------------------------------------------------
+                Description:
+                ************
+                    - This class was made to be used by an application where we need to make sure that the order of the features are
+                    the same as the one used when training the model.
+                    
+                Attributes:
+                ***********
+                    - model : MinMaxScaler()
+                    - columns_order = list
+                
+                Fit:
+                *****
+                    - Retrieve the model columns' order.
+
+                Transform:
+                ************
+                    - Reorder dataset to reflect the same order as the trained MinMaxScaler()
+'''
 class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, transf_model):
-        self.transf_model = transf_model
+    def __init__(self, model):
+        self.model = model
         self.columns_order = None
     
     def fit(self, X):
-        self.columns_order = self.transf_model.feature_names_in_
+        self.columns_order = self.model.feature_names_in_
         return self
 
     def transform(self, X, y=None):

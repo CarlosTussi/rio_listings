@@ -1,23 +1,23 @@
 '''
-How to run (Windows):
 
-** From the 'rio_listings' folder **
+    * This module is the start point for training the model.
+      It will run all the pipelines necessary to process, train and evaluate the module based on the input data.
 
-    python -m training.main
+
+    * How to run (Windows):
+
+        (!) From the 'rio_listings' folder (!)
+
+            python -m training.main
 
 '''
 
 import pandas as pd
 import numpy as np
-
 import joblib
-
 import training.data_preprocess as pre
 import training.model_training_evaluation as mdl
-
 from source.config import * 
-
-
 from sklearn.model_selection import train_test_split
 
 

@@ -1,12 +1,12 @@
 '''
-How to run (Windows):
+    *  Starting point for the application *
 
-    $env:PYTHONPATH = (Get-Location)
+    
+    * How to run (Windows):   
+     (!) From the 'rio_listings' folder.
 
-
-** From the 'rio_listings' folder **
-
-    streamlit run .\source\app\main.py
+        $env:PYTHONPATH = (Get-Location)
+        streamlit run .\source\app\main.py
 
 '''
 

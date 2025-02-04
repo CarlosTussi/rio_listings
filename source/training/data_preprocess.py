@@ -6,22 +6,23 @@ from sklearn.pipeline import Pipeline
 
 from pipelines.pipelines import preprocess_pipeline
 
-'''
-def preprocess_pipeline_preparation(df : pd.DataFrame, target : str) -> tuple
 
-    * This function preprocess the target feature only and separate it from the training dataset. *
+'''
+    def pipeline_preparation(df : pd.DataFrame, target : str) -> tuple
+
+        - This function preprocess the target feature only and separate it from the training dataset.
 
     Input:
-    -----
+    *****
         df : pd.DataFrame
         target : str
 
     Output:
-    -------
+    ******
         tuple: (pd.DataFrame, np.Series)
 
 '''
-def preprocess_pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
+def pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
 
     # Dropping 'na' for prices
     df = df.dropna(subset = target)
@@ -41,21 +42,26 @@ def preprocess_pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
 
 
 '''
-    *  *
+    def preprocess(df : pd.DataFrame, target: str) -> tuple:
+    
+        - This functions receives the target feature and the input dataset and transforms the data to be fit to a model.
 
     Input:
-    -----
-       
+    ******
+       - df: pd.DataFrame
+       - target: str
 
     Output:
-    -------
+    *******
+       - tuple: (pd.DataFrame, np.Series)
 
 '''
-def preprocess(df, target):
+def preprocess(df : pd.DataFrame, target: str) -> tuple:
 
-    X, y = preprocess_pipeline_preparation(df, target)
+    # Filter target value and separate from dataset
+    X, y = pipeline_preparation(df, target)
 
-
+    # Exercutes data preprocessing pipeline
     X_t = preprocess_pipeline.fit_transform(X)
 
     return X_t, y

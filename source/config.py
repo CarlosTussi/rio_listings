@@ -87,6 +87,7 @@ FEATURES_TO_DROP_REGEX = ".*host.*|.*id.*|.*url.*"
 ################
 #  File paths  #
 ################
+
 # Input dataset filepath
 TRAINING_DATA_PATH = 'data/listings.csv'
 
@@ -107,6 +108,7 @@ SCALER_MODEL_PATH = 'models/scaler_transf_model.joblib'
 ###################
 #  GUI Specifics  #
 ###################
+
 RIO_COORDINATES = [-22.970294234, -43.18559545]
 AMENITIES_GUI = [
                 ("Parking", "has_parking"), 

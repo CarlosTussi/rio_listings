@@ -6,8 +6,11 @@ from source.pipelines.custom_transformers import *
 from source.config import *
 
 '''
-    *  *
+    ----------------------------
+    num_feat_extraction_pipeline
+    ----------------------------
 
+    * Feature extraction for numerical features*
 
 '''
 num_feat_extraction_pipeline = Pipeline([
@@ -16,7 +19,13 @@ num_feat_extraction_pipeline = Pipeline([
 
 
 '''
-    *  *
+    ---------------------------------
+    num_feat_extraction_pipeline_app
+    --------------------------------
+
+    * Feature extraction for numerical features for the application (!) *
+
+    OBS: Same as the original 'num_feat_extraction_pipeline' for the moment for now. Created for consistency purposes. 
 
 
 '''
@@ -26,8 +35,14 @@ num_feat_extraction_pipeline_app = Pipeline([
 
 
 '''
-    *  *
+    ---------------------------------
+    cat_feat_extraction_pipeline_app
+    ---------------------------------
 
+    * Feature extraction for categorical features for the application (!) *
+
+    1) Text Preprocess
+    2) Feature Extraction relevant for the application (!)
 
 '''
 cat_feat_extraction_pipeline_app = Pipeline([
@@ -42,7 +57,14 @@ cat_feat_extraction_pipeline_app = Pipeline([
 
 
 '''
-    *  *
+    ----------------------------
+    cat_feat_extraction_pipeline
+    ----------------------------
+
+    * Feature extraction for categorical features *
+
+    1) Text Preprocess
+    2) Features Extractions
 
 
 '''
@@ -63,7 +85,13 @@ cat_feat_extraction_pipeline = Pipeline([
 
 
 '''
-    *  *
+    ----------------------
+    data_cleaning_pipeline
+    ----------------------
+
+    1) Dealing with NAs
+    2) Removing Outliers
+    3) Encoding data
 
 
 '''
@@ -102,7 +130,16 @@ data_cleaning_pipeline = Pipeline([
 
 
 '''
-    * Main pipeline  *
+    -------------------
+    preprocess_pipeline
+    --------------------
+
+    * Main data preparation pipeline  *
+
+    1) Data cleaning
+    2) Feature Extraction
+    3) Feature Selection
+    4) Scaling
 
 '''
 preprocess_pipeline = Pipeline([

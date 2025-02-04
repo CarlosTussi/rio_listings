@@ -1,3 +1,7 @@
+'''
+    This module contains the functions responsable only for training and evaluation of the model.
+'''
+
 import pandas as pd
 import numpy as np
 
@@ -12,17 +16,22 @@ from sklearn.metrics import r2_score
 
 
 '''
-    * *
+    def model_training(X_train, y_train):
+
+        - Train a HistGradientBoostingRegressor model
 
     Input:
-    -----
-        
+    ******
+        - x_train : list(np.array)
+        - y_train: np.array
 
     Output:
-    -------
-       
+    *******
+    model = HistGradientBoostingRegressor       # Trained model
+
 '''
-def model_training(X_train, y_train):
+def model_training(X_train: list, y_train: np.array) -> HistGradientBoostingRegressor:
+
     model = HistGradientBoostingRegressor(random_state = 69)
     model.fit(X_train, y_train)
 
@@ -30,19 +39,29 @@ def model_training(X_train, y_train):
 
 
 '''
-    * *
+
+    def model_evaluation(pred_model, X_test, y_test):
+
+        - Evaluate the mmodel using regression's statistics:
+            MAE, RMSE, R2, MAPE
 
     Input:
-    -----
-        
+    ******
+        - pred_model: HistGradientBoostingRegressor
+        - X_test : list(np.array)
+        - y_test : np.array
 
     Output:
-    -------
+    *******
+        - result : pd.DataFrame
        
 '''
 
-def model_evaluation(pred_model, X_test, y_test):
+def model_evaluation(pred_model : HistGradientBoostingRegressor, 
+                    X_test : list, 
+                    y_test: np.array) -> pd.DataFrame:
     
+    # Predict using test set
     y_pred = pred_model.predict(X_test)
 
 
