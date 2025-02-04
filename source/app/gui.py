@@ -6,7 +6,9 @@ import numpy as np
 import folium
 from streamlit_folium import st_folium
 
-from app.processing_predict import process_and_predict
+from source.app.processing_predict import process_and_predict
+from source.config import *
+
 
 import regex as re
 
@@ -17,13 +19,13 @@ def map_component():
 
     st.subheader("1) Click on the location on the map: ")
 
-    marker_location = [-22.970294234, -43.18559545] #Rio
+    marker_location = RIO_COORDINATES 
     
     # Default value
     if("longitude" not in st.session_state["model_input"]):
         st.session_state["model_input"].update({
-                "longitude": -43.18559545,
-                "latitude": -22.970294234
+                "longitude": RIO_COORDINATES[1],
+                "latitude":  RIO_COORDINATES[0]
             })
     
     m = folium.Map(location= marker_location, zoom_start=15)
@@ -63,20 +65,7 @@ amenities
 '''
 def has_item_component():
     
-    amenities = [
-                ("Parking", "has_parking"), 
-                ("Pool", "has_pool"),
-                ("Washer","has_washer"),
-                ("Dishwasher", "has_dishwasher"),
-                ("Ceiling Fan", "has_ceiling_fan"),
-                ("Long Term Stay", "has_long_term"),
-                ("BBQ Grill", "has_bbq_grill"),
-                ("Outdoor Area", "has_outdoor"),
-                ("Bathtub", "has_bathtub"),
-                ("Hot tub", "has_hot_tub"),
-                ("AC", "has_ac"),
-                ("Seaview", "has_seaview"),
-                ]
+    amenities = AMENITIES_GUI
 
     st.subheader("2) Select the presence of any of these amenities: ")
 
@@ -148,13 +137,13 @@ def capacity_component():
     with col1:
         accommodates = st.selectbox(
             "Number of Guests: ",
-            ([str(x) for x in range(1,10)] + ["10+"]),
+            ([str(x) for x in range(1,ACCOMM_LIM_FT)] + [str(ACCOMM_LIM_FT)+"+"]),
         )
         update_total_value("accommodates", accommodates)
         
         bathrooms = st.selectbox(
             "Number of Bathrooms: ",
-            ([str(x) for x in range(0,5)]+ ["5+"]),
+            ([str(x) for x in range(0,BATHROOM_LIM_FT)]+ [str(BATHROOM_LIM_FT)+"+"]),
         )
         update_total_value("bathrooms", bathrooms)
 
@@ -175,13 +164,13 @@ def capacity_component():
     with col2:
         beds = st.selectbox(
             "Number of Beds: ",
-            ([str(x) for x in range(0,8)] + ["8+"]),
+            ([str(x) for x in range(0,BEDS_LIM_FT)] + [str(BEDS_LIM_FT) + "+"]),
         )
         update_total_value("beds", beds)
 
         bedrooms = st.selectbox(
             "Number of Bedrooms: ",
-            ([str(x) for x in range(0,5)] + ["5+"]),
+            ([str(x) for x in range(0,BEDROOMS_LIM_FT)] + [str(BEDROOMS_LIM_FT)+"+"]),
         )
         update_total_value("bedrooms", bedrooms)
 
@@ -224,7 +213,7 @@ def number_of_nights_component():
 
     minimum_nights_avg_ntm = st.selectbox(
             "Minimum nights: ",
-            ([str(x) for x in range(1,7)] + ["7+"]),
+            ([str(x) for x in range(1,MIN_NIGHTS_LIM_FT)] +[str(MIN_NIGHTS_LIM_FT)+"+"]),
         )
     update_total_value("minimum_nights_avg_ntm", minimum_nights_avg_ntm)
 
@@ -306,11 +295,11 @@ def df_component(df_display):
 
 
     with col1:
-        st.dataframe(df_display.iloc[0:9, :])
+        st.dataframe(df_display.iloc[0:10, :])
     with col2:
-        st.dataframe(df_display.iloc[9:19, :])
+        st.dataframe(df_display.iloc[10:20, :])
     with col3:
-        st.dataframe(df_display.iloc[19:, :])
+        st.dataframe(df_display.iloc[20:, :])
 
 '''
 

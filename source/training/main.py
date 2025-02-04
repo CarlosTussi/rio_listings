@@ -1,7 +1,9 @@
 '''
 How to run (Windows):
 
-python -m training.main
+** From the 'rio_listings' folder **
+
+    python -m training.main
 
 '''
 
@@ -13,6 +15,8 @@ import joblib
 import training.data_preprocess as pre
 import training.model_training_evaluation as mdl
 
+from source.config import * 
+
 
 from sklearn.model_selection import train_test_split
 
@@ -20,7 +24,7 @@ from sklearn.model_selection import train_test_split
 if __name__ == "__main__":
 
     # Read the data
-    df = pd.read_csv("../data/listings.csv", sep = ",")
+    df = pd.read_csv(TRAINING_DATA_PATH, sep = ",")
 
     # Preprocess Data Piepline
     X, y = pre.preprocess(df, target = "price")
@@ -38,4 +42,4 @@ if __name__ == "__main__":
     print(results)
 
     # Save Model
-    joblib.dump(model, '../models/price_model.joblib')
+    joblib.dump(model, MAIN_PRED_MODEL_PATH)

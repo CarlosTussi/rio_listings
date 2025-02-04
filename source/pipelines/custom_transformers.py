@@ -14,6 +14,8 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
 
+from source.config import *
+
 import joblib
 
 
@@ -35,19 +37,13 @@ class ColumnDroppersTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
 
         # Find features related to host, id and url
-        re_drop = ".*host.*|.*id.*|.*url.*"
+        re_drop = FEATURES_TO_DROP_REGEX
         for feat in X.columns:
             if re.match(re_drop, feat):
                  self.drop_feat.append(feat)
         # Add extra features that for sure will not ber part of the model
         # This could be defined in the init step, but placed here together if the regex feature selection for better organisation
-        self.drop_feat.extend(["calendar_updated", "license", "neighbourhood_group_cleansed","neighbourhood_cleansed", "neighbourhood", "neighborhood_overview", 
-                          "last_scraped", "source", "first_review", "last_review", "name", "number_of_reviews_l30d", "number_of_reviews",
-                          "availability_30","availability_60","availability_90", "minimum_nights", "maximum_nights", "review_scores_value",  
-                         "review_scores_accuracy", "review_scores_rating", "review_scores_checkin", "review_scores_cleanliness", "review_scores_communication",
-                         "has_availability", "instant_bookable", "calendar_last_scraped", 'minimum_minimum_nights', 'maximum_minimum_nights', 'minimum_maximum_nights', 
-                          'maximum_maximum_nights', 'maximum_nights_avg_ntm', 'property_type'])
-
+        self.drop_feat.extend(FEATURES_TO_DROP)
 
         return self
     
@@ -195,7 +191,7 @@ class ClusterGeolocationTransformer(BaseEstimator, TransformerMixin):
         X['geo_cluster'] = self.k_means.labels_ 
 
         # Save the model
-        joblib.dump(self.k_means, '../models/geo_kmeans_model.joblib')
+        joblib.dump(self.k_means, GEO_CLUSTER_MODEL_PATH)
 
 
         # Onde-Hot-Encoder
@@ -544,7 +540,7 @@ class NumImputer(BaseEstimator, TransformerMixin):
         
         num_ft = X.select_dtypes(exclude = 'object').columns
         for a_ft in num_ft:
-            X.loc[:, a_ft] = X[a_ft].fillna(0)
+            X.loc[:, a_ft] = X[a_ft].fillna(self.value)
         
         print("End - FeaturesImputer")
     
@@ -691,7 +687,7 @@ class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
     
     def fit(self, X):
         self.minmax.fit(X)
-        joblib.dump(self.minmax, "../models/normaliser_model.joblib")
+        joblib.dump(self.minmax, NORM_MODEL_PATH)
         return self
 
     def transform(self, X, y=None):

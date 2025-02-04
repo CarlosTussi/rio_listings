@@ -2,7 +2,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 
-from pipelines.custom_transformers import *
+from source.pipelines.custom_transformers import *
+from source.config import *
 
 '''
     *  *
@@ -10,7 +11,7 @@ from pipelines.custom_transformers import *
 
 '''
 num_feat_extraction_pipeline = Pipeline([
-    ("clusterlocation", ClusterGeolocationTransformer(clusters = 25, init = "random", n_init = 15, max_iter = 1000)),
+    ("clusterlocation", ClusterGeolocationTransformer(clusters = NUMBER_OF_CLUSTERS_FT, init = "random", n_init = 15, max_iter = 1000)),
 ])
 
 
@@ -20,7 +21,7 @@ num_feat_extraction_pipeline = Pipeline([
 
 '''
 num_feat_extraction_pipeline_app = Pipeline([
-    ("clusterlocation", ClusterGeolocationTransformer(clusters = 25, init = "random", n_init = 15, max_iter = 1000)),
+    ("clusterlocation", ClusterGeolocationTransformer(clusters = NUMBER_OF_CLUSTERS_FT, init = "random", n_init = 15, max_iter = 1000)),
 ])
 
 
@@ -35,9 +36,7 @@ cat_feat_extraction_pipeline_app = Pipeline([
      #Creates a new feature based on lux words
     ("extractluxdescription", ContainWordsTransformer(new_feature_name = "contains_lux_description", 
                                                corpus_target = "description",
-                                               words = ["lux","luxurious","luxury","fancy","garage", 
-                                                  "hydromassage", "cellar", "sophistication", 
-                                                  "magnificent", "colonial", "rooftop", "triplex", "suite"])), 
+                                               words = DESCRIPTION_LUXWORDS_FT)), 
 ])
 
 
@@ -53,25 +52,9 @@ cat_feat_extraction_pipeline = Pipeline([
      #Creates a new feature based on lux words
     ("extractluxdescription", ContainWordsTransformer(new_feature_name = "contains_lux_description", 
                                                corpus_target = "description",
-                                               words = ["lux","luxurious","luxury","fancy","garage", 
-                                                  "hydromassage", "cellar", "sophistication", 
-                                                  "magnificent", "colonial", "rooftop", "triplex", "suite"])), 
+                                               words = DESCRIPTION_LUXWORDS_FT)), 
     
-    ("extractamenities", ExtractAmenitiesTransformer(
-                                                { "parking": ".*parking on premises.*",
-                                                  "pool":".*pool.*(?!.*\btable\b).*",
-                                                  "washer": ".*washer.*",
-                                                  "dishwasher": ".*dishwasher.*",
-                                                 "ceiling_fan" : ".*ceiling fan.*",
-                                                 "long_term" : ".*long term.*",
-                                                 "bbq_grill" : ".*bbq grill.*",
-                                                 "outdoor": ".*outdoor.*",
-                                                 "hot_tub": ".*hot tub.*",
-                                                 "bathtub": ".*bathtub.*",
-                                                 "ac": [".*air conditioning.*","\\bac\\b"],
-                                                 "seaview" : [".*beach view.*",".*sea view.*",".*ocean view.*"]
-                                                }
-    )),
+    ("extractamenities", ExtractAmenitiesTransformer(AMENITIES_REGEX_FT)),
     
     ("extractbathroom", ExtractBathroom()),
     ("extractscore", ExtractScore())
@@ -87,21 +70,19 @@ cat_feat_extraction_pipeline = Pipeline([
 data_cleaning_pipeline = Pipeline([   
       
     #Imputers
-    ("num_imputer", NumImputer(value = 0)),
+    ("num_imputer", NumImputer(value = NUM_VAL_IMP)),
     ("cat_imputer", CatImputer(
-                            features_limits = [("bathrooms_text", "Private bath"),
-                                               ("description", ""),
-                                              ])),
+                            features_limits = CAT_VAL_IMP)),
     #Outliers
     ("num_outliers", OutlierRemover(
                                 features_limit = [
-                                                 ("minimum_nights_avg_ntm", 7),
-                                                 ("beds", 8),
-                                                 ("bedrooms", 5),
-                                                 ("bathrooms", 5),
-                                                 ("accommodates", 10),
-                                                 ("number_of_reviews_ltm", 25),
-                                                 ("reviews_per_month", 4),
+                                            ("minimum_nights_avg_ntm", MIN_NIGHTS_LIM_FT),
+                                            ("beds", BEDS_LIM_FT),
+                                            ("bedrooms", BEDROOMS_LIM_FT),
+                                            ("bathrooms", BATHROOM_LIM_FT),
+                                            ("accommodates", ACCOMM_LIM_FT),
+                                            ("number_of_reviews_ltm", NIGHTS_LTM_LIM_FT),
+                                            ("reviews_per_month", REVIEWS_P_MONTH_LIM_FT),
                                                 ],
                                 mode = "cap",
                                 operator = "lt" #operation: less then (lt)
@@ -127,9 +108,6 @@ data_cleaning_pipeline = Pipeline([
 preprocess_pipeline = Pipeline([
         # Outliers, Nas
         ('data_cleaning_pipeline', data_cleaning_pipeline),
-
-        # Encoding
-        #('data_encoding_pipeline', data_encoding_pipeline),
         
         # Feature Extraction
         ("num_feature_extraction_pipeline", num_feat_extraction_pipeline),

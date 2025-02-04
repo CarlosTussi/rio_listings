@@ -1,14 +1,18 @@
 '''
 How to run (Windows):
 
-streamlit run .\app\main.py
+    $env:PYTHONPATH = (Get-Location)
+
+
+** From the 'rio_listings' folder **
+
+    streamlit run .\source\app\main.py
 
 '''
 
-
-
 import joblib
-from app.gui import *
+from source.app.gui import *
+from source.config import *
 
 if __name__ == "__main__":
     
@@ -16,13 +20,13 @@ if __name__ == "__main__":
     # LOAD MODELS #
     ###############
     # Main price prediction model
-    model = joblib.load("../models/price_model.joblib")
+    model = joblib.load(MAIN_PRED_MODEL_PATH)
 
     # Cluster model for coordinates
-    geo_cluster_model = joblib.load("../models/geo_kmeans_model.joblib")
+    geo_cluster_model = joblib.load(GEO_CLUSTER_MODEL_PATH)
 
     # Data Normalisation model
-    normaliser_model = joblib.load("../models/normaliser_model.joblib")
+    normaliser_model = joblib.load(NORM_MODEL_PATH)
 
     #######
     # GUI #

@@ -1,4 +1,4 @@
-from pipelines import pipelines
+from source.pipelines import pipelines
 from sklearn.pipeline import Pipeline
 
 
