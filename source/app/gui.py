@@ -1,3 +1,7 @@
+'''
+    User interface components
+'''
+
 
 import streamlit as st
 import pandas as pd
@@ -13,7 +17,15 @@ from source.config import *
 import regex as re
 
 '''
-map
+    def map_component()
+    -------------------
+
+    - Allows user to click on the map, capturing the coordinates of that click.
+
+    - features:
+        - longitude
+        - latitude
+
 '''
 def map_component():
 
@@ -61,7 +73,16 @@ def map_component():
     st.caption(f"Location coordinates: {marker_location}")
 
 '''
-amenities
+    def has_item_component()
+    ------------------------
+
+    - Allows user to select the presence of predefined amenities.
+
+    - features:
+        has_pool
+        has_bathtub
+        ...
+
 '''
 def has_item_component():
     
@@ -101,6 +122,21 @@ def has_item_component():
     
 
 '''
+    def update_total_value(feature_name, value, type = "int")
+    ---------------------------------------------------------
+
+    - This function updates the 'model_input' session state variable with values input from the user.
+
+    - Input:
+      *****
+        - feature_name: str
+        - value: numeric
+        - type: str
+
+    - Output:
+      *******
+        - None
+
 
 '''
 def update_total_value(feature_name, value, type = "int"):
@@ -122,11 +158,18 @@ def update_total_value(feature_name, value, type = "int"):
 
 
 '''
-accommodates
-bathrooms
-is_bathroom_shared
-beds
-bedrooms
+    def capacity_component()
+    ------------------------
+
+    - Alows the user to input the capacity values for some features.
+
+    - features:
+        - accommodates
+        - bathrooms
+        - is_bathroom_shared
+        - beds
+        - bedrooms
+        
 '''
 def capacity_component():
     st.subheader("3) Select the maximum capacities: ")
@@ -176,7 +219,14 @@ def capacity_component():
 
        
 '''
-property_type
+    def property_type_component()
+    -----------------------------
+
+    - Radio option button to select the property type.
+
+    - feature:
+        - property_type
+
 '''
 def property_type_component():
 
@@ -199,8 +249,15 @@ def property_type_component():
     })
 
 '''
-availability_365
-minimum_nights_avg_ntm
+    def number_of_nights_component()
+    --------------------------------
+
+    - Alows the user to indicate numeric values for features related to number of nights.
+
+    -features:
+        - availability_365
+        - minimum_nights_avg_ntm
+
 '''
 def number_of_nights_component():
 
@@ -218,9 +275,16 @@ def number_of_nights_component():
     update_total_value("minimum_nights_avg_ntm", minimum_nights_avg_ntm)
 
 '''
-numnumber_of_reviews_ltm
-reviews_per_month
-review_scores_location
+    def reviews_component()
+    -----------------------
+
+    -  Inteface components to capture inforamtion about reviews.
+
+    - features:
+        -numnumber_of_reviews_ltm
+        -reviews_per_month
+        -review_scores_location
+
 '''
 def reviews_component():
     st.subheader("6) Reviews: ")
@@ -246,7 +310,16 @@ def reviews_component():
         st.session_state["model_input"].update({"is_score_empty": 1})
 
 
-     
+'''
+    def description_component()
+    ---------------------------
+
+    - Text area that receives the property description from the user.
+
+    -features:
+        - description
+
+'''
 def description_component():
     text_area = st.text_area(
         "Property description",
@@ -259,7 +332,25 @@ def description_component():
     )
 
 
+'''
+    def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input)
+    ------------------------------------------------------------------------------------------------------
 
+    - This components initiates the data transformation and price prediction.
+    - It also displays the price preddicted.
+
+    - Input:
+      ******
+        - price_pred_model : HistGradientBoostingRegressor()    # Trained model
+        - geo_cluster_transf_model : KMeans()                   # Trained model
+        - scaler_transf_model : MaxMinScaler()                  # Trained model
+        - df_model_input : pd.DataFrame
+
+    - feature:
+        - price
+
+
+'''
 def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_model, df_model_input):
 
     # Buttons to run the model or reset
@@ -287,6 +378,14 @@ def buttons_component(price_pred_model, geo_cluster_transf_model, scaler_transf_
 
 
 '''
+    def df_component(df_display)
+    ----------------------------
+
+    - Displays a dataframe with the data input byt the user.
+
+    - Input:
+      ******
+      - df:display : pd.DataFrame
 
 '''
 def df_component(df_display):
@@ -302,6 +401,16 @@ def df_component(df_display):
         st.dataframe(df_display.iloc[20:, :])
 
 '''
+    def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model)
+
+    - Centralizes all the componentes in order of appearance for the user.
+
+    - Input:
+      *****
+        - price_pred_model : HistGradientBoostingRegressor()    # Trained model
+        - geo_cluster_transf_model : KMeans()                   # Trained model
+        - scaler_transf_model : MaxMinScaler()                  # Trained model    
+
 
 '''
 def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model):
@@ -336,7 +445,3 @@ def gui(price_pred_model, geo_cluster_transf_model, scaler_transf_model):
     # Data frame that will be display to the user before its transformations
     df_display = df_model_input.copy().T
     df_component(df_display)
-
-
-
-    

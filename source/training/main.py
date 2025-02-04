@@ -1,7 +1,7 @@
 '''
 
     * This module is the start point for training the model.
-      It will run all the pipelines necessary to process, train and evaluate the module based on the input data.
+      It will run all the pipelines required to process, train and evaluate the module based on the input data.
 
 
     * How to run (Windows):

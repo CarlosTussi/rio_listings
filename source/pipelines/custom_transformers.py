@@ -1,6 +1,6 @@
 '''
 
-    This module contains all the custom transformers implementation necessary for the pipeline.
+    This module contains all the custom transformers' implementation required for the pipeline.
     Each custom transformer implements methos fit() and transforms().
 
 '''
