@@ -5,22 +5,31 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
 ## Table of Contents
 - [About](#about)
 - [Data](#data)
-    * [Source](#source)
-    * [Overview](#overview)
-        + [Features](#features)
+    - [Source](#source)
+    - [Overview](#overview)
+        - [Features](#features)
 - [Methodology](#methodology)
-    * [Data Cleaning](#datacleaning)
-    * [EDA/FE](#edafe)
-    * [Feature Selection](#featureselection)
-    * [Model](#model)
-    * [Evaluation](#evaluation)
+    - [Data Cleaning](#datacleaning)
+    - [EDA and FE](#eda-and-fe)
+    - [Feature Selection](#featureselection)
+    - [Model](#model)
+    - [Evaluation](#evaluation)
 - [Implementation](#implementation)
-    * [Installation](#installation)
-    * [Training](#training)
-    * [Application](#app)
+    - [Installation](#installation)
+    - [Training](#training)
+    - [Application](#app)
 - [Future Versions](#future)
 
-## Installation
+## About
+## Data
+## Methodology
+### Data Cleaning
+### EDA/FE
+### Feature Selection
+### Model
+### Evaluation
+## Implementation
+### Installation
 *Python Version: 3.12.9*
 1. Clone the repository
     ```sh
@@ -48,18 +57,5 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
     pip install -r requirements.txt
     ```
 
-## Usage
-
-Run the script indicating the number of pages to be scraped.
-
-```sh
-python .\scraper.py 2
-```
-
-## Output
-
-CSV file ("books.csv") is generated with the following headers:
-*  Title	- Price  - 	Stars
-
-Each row will contain the relevant data for a book extracted from the website.
+## Future Versions
 
