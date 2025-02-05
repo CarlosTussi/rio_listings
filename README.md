@@ -9,9 +9,9 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
     - [Overview](#overview)
         - [Features](#features)
 - [Methodology](#methodology)
-    - [Data Cleaning](#datacleaning)
+    - [Data Cleaning](#data-cleaning)
     - [EDA and FE](#eda-and-fe)
-    - [Feature Selection](#featureselection)
+    - [Feature Selection](#feature-selection)
     - [Model](#model)
     - [Evaluation](#evaluation)
 - [Implementation](#implementation)
@@ -24,7 +24,7 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
 ## Data
 ## Methodology
 ### Data Cleaning
-### EDA/FE
+### EDA and FE
 ### Feature Selection
 ### Model
 ### Evaluation
