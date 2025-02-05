@@ -16,6 +16,7 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
     - [Evaluation](#evaluation)
 - [Implementation](#implementation)
     - [Installation](#installation)
+    - [Overview](#overview)
     - [Training](#training)
     - [Application](#app)
 - [Future Versions](#future)
@@ -29,7 +30,6 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
 ### Model
 ### Evaluation
 ## Implementation
-![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
 ### Installation
 *Python Version: 3.12.9*
 1. Clone the repository
@@ -57,6 +57,7 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
     ```sh
     pip install -r requirements.txt
     ```
-
+### Overview
+![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
 ## Future Versions
 
