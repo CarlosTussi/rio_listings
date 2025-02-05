@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.pipeline import Pipeline
 
 
-from pipelines.pipelines import preprocess_pipeline
+from source.pipelines.pipelines import preprocess_pipeline
 
 
 '''

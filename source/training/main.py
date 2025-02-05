@@ -8,15 +8,15 @@
 
         (!) From the 'rio_listings' folder (!)
 
-            python -m training.main
+            python -m source.training.main
 
 '''
 
 import pandas as pd
 import numpy as np
 import joblib
-import training.data_preprocess as pre
-import training.model_training_evaluation as mdl
+import source.training.data_preprocess as pre
+import source.training.model_training_evaluation as mdl
 from source.config import * 
 from sklearn.model_selection import train_test_split
 
