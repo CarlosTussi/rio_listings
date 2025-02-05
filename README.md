@@ -29,6 +29,7 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
 ### Model
 ### Evaluation
 ## Implementation
+![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
 ### Installation
 *Python Version: 3.12.9*
 1. Clone the repository
