@@ -421,7 +421,7 @@ class ContainWordsTransformer(BaseEstimator, TransformerMixin):
         X[self.new_feature_name] = X[self.corpus_target].apply(check_lux_corpus)
         
         # Drop corpus target feature
-        X = X.drop(self.corpus_target, axis = 1)
+        #X = X.drop(self.corpus_target, axis = 1)
         
         print("End - ContainWordsTransformer")
         

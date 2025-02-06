@@ -19,7 +19,7 @@ AMENITIES_REGEX_FT = { "parking": ".*parking on premises.*",
                        "long_term" : ".*long term.*",
                        "bbq_grill" : ".*bbq grill.*",
                        "outdoor": ".*outdoor.*",
-                       "hot_tub": ".*hot tub.*",
+                       "jacuzzi": ".*hot tub.*",
                        "bathtub": ".*bathtub.*",
                        "ac": [".*air conditioning.*","\\bac\\b"],
                        "seaview" : [".*beach view.*",".*sea view.*",".*ocean view.*"]
@@ -44,7 +44,7 @@ NIGHTS_LTM_LIM_FT = 25
 # (reviews_per_month)
 REVIEWS_P_MONTH_LIM_FT = 4
 # (minimum_nights_avg_ntm)
-MIN_NIGHTS_LIM_FT = 7
+MIN_NIGHTS_LIM_FT = 5
 
 
 
@@ -75,7 +75,7 @@ FEATURES_TO_DROP = ["calendar_updated", "license", "neighbourhood_group_cleansed
                     "minimum_nights", "maximum_nights", "review_scores_value", "review_scores_accuracy", 
                     "review_scores_rating", "review_scores_checkin", "review_scores_cleanliness", "review_scores_communication",
                     "has_availability", "instant_bookable", "calendar_last_scraped", 'minimum_minimum_nights', 'maximum_minimum_nights', 'minimum_maximum_nights', 
-                    'maximum_maximum_nights', 'maximum_nights_avg_ntm', 'property_type']
+                    'maximum_maximum_nights', 'maximum_nights_avg_ntm', 'property_type', 'description']
 
 # Extra features not relevant that contain the following patterns
 FEATURES_TO_DROP_REGEX = ".*host.*|.*id.*|.*url.*"

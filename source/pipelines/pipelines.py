@@ -71,14 +71,15 @@ cat_feat_extraction_pipeline_app = Pipeline([
 cat_feat_extraction_pipeline = Pipeline([
     #Removes capital letters, ponctuation, etc...
     ("preprocesstext", PreprocessCorpus("description")),
-     #Creates a new feature based on lux words
+     #Creates a new feature based on lux words (expensive properties)
     ("extractluxdescription", ContainWordsTransformer(new_feature_name = "contains_lux_description", 
                                                corpus_target = "description",
                                                words = DESCRIPTION_LUXWORDS_FT)), 
-    
+    # Extract amenities features
     ("extractamenities", ExtractAmenitiesTransformer(AMENITIES_REGEX_FT)),
-    
+    # Extract bathroom information feature
     ("extractbathroom", ExtractBathroom()),
+    # Extraact score information features
     ("extractscore", ExtractScore())
 ])
 

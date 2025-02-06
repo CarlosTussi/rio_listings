@@ -18,6 +18,7 @@ Airbnb Propeprty Price Predictor
     - [Overview](#overview)
     - [Training](#training)
     - [Application](#app)
+- [Limitations](#limitations)
 - [Future Versions](#future)
 
 ## About
@@ -105,5 +106,7 @@ Airbnb Propeprty Price Predictor
 
 ### Overview
 ![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
+## Limitations
 ## Future Versions
-
+- Deeper analysis of description and amenities texts.
+- Retrain the model with new data (new properties)
