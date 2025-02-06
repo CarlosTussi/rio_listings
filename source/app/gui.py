@@ -264,7 +264,7 @@ def number_of_nights_component():
     st.subheader("5) Number of Nights: ")
 
     availability_365 = st.number_input(
-    "Number of nights available in the year : ", min_value = 1, max_value = 356, value=1, placeholder="Type available nights in a year..."
+    "Number of nights available in the next 365 days : ", min_value = 1, max_value = 356, value=1, placeholder="Type available nights in a year..."
 )
     update_total_value("availability_365", availability_365)
 

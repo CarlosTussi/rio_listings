@@ -5,6 +5,8 @@
 import pandas as pd
 import numpy as np
 
+from source.config import *
+
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 # Metrics
@@ -13,6 +15,8 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import r2_score
 
+# Fine-tuning with Grid Search
+from sklearn.model_selection import GridSearchCV
 
 
 '''
@@ -30,12 +34,37 @@ from sklearn.metrics import r2_score
     model = HistGradientBoostingRegressor       # Trained model
 
 '''
-def model_training(X_train: list, y_train: np.array) -> HistGradientBoostingRegressor:
 
-    model = HistGradientBoostingRegressor(random_state = 69)
-    model.fit(X_train, y_train)
+def model_training(X_train: list, y_train: np.array, grid_search_on = False) -> HistGradientBoostingRegressor:
+    
+    # Using GridSearch to find best parameters
+    if (grid_search_on):
 
-    return model
+        # Initialize model and GridSearch
+        model = HistGradientBoostingRegressor(random_state = 19)
+        param_grid = [GRID_SEARCH_PARAM]
+        grid_search = GridSearchCV(model, param_grid, cv = GRID_SEARCH_CV, scoring = 'r2')
+
+        # Fit
+        grid_search.fit(X_train, y_train)
+        
+        # Print best parameters
+        print(grid_search.best_params_)
+
+        return grid_search.best_estimator_.fit(X_train, y_train)
+    
+    # NOT using GridSearch
+    else:  
+        # Initialize model with the best parameters  
+        model = HistGradientBoostingRegressor(random_state = 19,
+                                            loss = "poisson",
+                                            learning_rate = 0.05,
+                                            max_features = 0.2,
+                                            max_iter = 300,
+                                            max_leaf_nodes= 81)
+
+        model.fit(X_train, y_train)
+        return model
 
 
 '''

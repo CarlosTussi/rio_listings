@@ -85,14 +85,14 @@ Airbnb Propeprty Price Predictor
     ```sh
     pip install -r requirements.txt
     ```
-6. Download the training dataset [here](https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-06-27/data/listings.csv.gz) if not already done.
-7. Place the downloaded data inside the 'data' folder
-    - Obs: rename it to 'listings.csv' if necessary.
 ### Usage (Windows)
 - The training and the app run independently as the models are already pre-loaded in the repository.
 - Should you wish to change the model, run the trining part first and then the app.
 #### Training
-1. Run the following command from the main folder 'rio_listings'
+1. Download the training dataset [here](https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-06-27/data/listings.csv.gz) if not already done.
+2. Place the downloaded data inside the 'data' folder
+    - Obs: rename it to 'listings.csv' if necessary.
+3. Run the following command from the main folder 'rio_listings'
     ```sh
       python -m source.training.main
       ```

@@ -5,6 +5,7 @@ from sklearn.pipeline import Pipeline
 
 
 from source.pipelines.pipelines import preprocess_pipeline
+from source.config import *
 
 
 '''
@@ -30,9 +31,11 @@ def pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
     # Convert prices to numerical value
     df.loc[:,target] = df[target].apply(lambda x: float(x[1:].replace(",","")) if pd.notna(x) else x)
 
-    PRICE_CAP = 1000
     # Cap price outliers
-    df.loc[:,target] = df[target].apply(lambda x : x if x < PRICE_CAP else PRICE_CAP)
+    df.loc[:,target] = df[target].apply(lambda x : x if x < PRICE_CAP_FT else PRICE_CAP_FT)
+
+    # Drop prices that are zero
+    df = df.loc[df.price > 0, :]
 
     # Separte target feature from the dataset
     X = df.drop(target, axis = 1)

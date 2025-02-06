@@ -7,23 +7,23 @@
 ########################
 
 #Target Feature
-PRICE_CAP_FT = 1000
+PRICE_CAP_FT = 850
 
 
 #Amenities
 AMENITIES_REGEX_FT = { "parking": ".*parking on premises.*",
-                                                  "pool":".*pool.*(?!.*\btable\b).*",
-                                                  "washer": ".*washer.*",
-                                                  "dishwasher": ".*dishwasher.*",
-                                                 "ceiling_fan" : ".*ceiling fan.*",
-                                                 "long_term" : ".*long term.*",
-                                                 "bbq_grill" : ".*bbq grill.*",
-                                                 "outdoor": ".*outdoor.*",
-                                                 "hot_tub": ".*hot tub.*",
-                                                 "bathtub": ".*bathtub.*",
-                                                 "ac": [".*air conditioning.*","\\bac\\b"],
-                                                 "seaview" : [".*beach view.*",".*sea view.*",".*ocean view.*"]
-                                                }
+                       "pool":".*pool.*(?!.*\btable\b).*",
+                       "washer": ".*washer.*",
+                       "dishwasher": ".*dishwasher.*",
+                       "ceiling_fan" : ".*ceiling fan.*",
+                       "long_term" : ".*long term.*",
+                       "bbq_grill" : ".*bbq grill.*",
+                       "outdoor": ".*outdoor.*",
+                       "hot_tub": ".*hot tub.*",
+                       "bathtub": ".*bathtub.*",
+                       "ac": [".*air conditioning.*","\\bac\\b"],
+                       "seaview" : [".*beach view.*",".*sea view.*",".*ocean view.*"]
+                     }
 # Description
 DESCRIPTION_LUXWORDS_FT = ["lux","luxurious","luxury","fancy","garage", 
                         "hydromassage", "cellar", "sophistication", 
@@ -39,7 +39,7 @@ BATHROOM_LIM_FT = 5
 BEDS_LIM_FT = 8
 # (bedrooms)
 BEDROOMS_LIM_FT = 5
-# (minimum_nights_avg_ntm)
+# (number_of_reviews_ltm)
 NIGHTS_LTM_LIM_FT = 25
 # (reviews_per_month)
 REVIEWS_P_MONTH_LIM_FT = 4
@@ -71,7 +71,7 @@ CAT_VAL_IMP = [("bathrooms_text", "Private bath"),
 
 FEATURES_TO_DROP = ["calendar_updated", "license", "neighbourhood_group_cleansed","neighbourhood_cleansed", "neighbourhood", 
                     "neighborhood_overview", "last_scraped", "source", "first_review", "last_review", "name", 
-                    "number_of_reviews_l30d", "number_of_reviews", "availability_30","availability_60","availability_90", 
+                    "number_of_reviews_l30d", "number_of_reviews", "availability_30", 
                     "minimum_nights", "maximum_nights", "review_scores_value", "review_scores_accuracy", 
                     "review_scores_rating", "review_scores_checkin", "review_scores_cleanliness", "review_scores_communication",
                     "has_availability", "instant_bookable", "calendar_last_scraped", 'minimum_minimum_nights', 'maximum_minimum_nights', 'minimum_maximum_nights', 
@@ -81,7 +81,16 @@ FEATURES_TO_DROP = ["calendar_updated", "license", "neighbourhood_group_cleansed
 FEATURES_TO_DROP_REGEX = ".*host.*|.*id.*|.*url.*"
 
 
-
+#Grid Search Parameters
+GRID_SEARCH_PARAM = {
+                    'loss': ["poisson"],
+                    'max_iter': [100,200,300],
+                    'learning_rate': [0.05, 1],
+                    'max_leaf_nodes': [71,81,91],
+                    'max_features': [0.15,0.2,0.25]
+}
+#Grid Search Cross-Validation
+GRID_SEARCH_CV = 3
 
 
 ################
