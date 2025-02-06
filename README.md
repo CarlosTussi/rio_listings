@@ -1,12 +1,11 @@
 Airbnb Propeprty Price Predictor 
 
-Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
-
 ## Table of Contents
 - [About](#about)
 - [Data](#data)
     - [Source](#source)
     - [Overview](#overview)
+        - [Data Dictionary](#data-dictionary)
         - [Features](#features)
 - [Methodology](#methodology)
     - [Data Cleaning](#data-cleaning)
@@ -23,6 +22,35 @@ Data sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/)
 
 ## About
 ## Data
+### Source
+- The training data set was sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/) and can be found on this [link](https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-06-27/data/listings.csv.gz).
+
+- Inside Airbnb provides quartely data for the last 12 months. It is possible, however, to make an archived data request, if necessary, on this [link](https://insideairbnb.com/data-requests/).
+
+### Overview
+#### Data Dictionary
+- The features' name and detailed information can be found in the data dictionary provided by Inside Aribnb on this [link](https://docs.google.com/spreadsheets/d/1iWCNJcSutYqpULSQHlNyGInUvHg2BoUGoNRIGa6Szc4/edit?gid=1322284596#gid=1322284596) 
+- This project conforms to the definitions from August 2022.
+#### Features
+- Features relevant for the project:
+    - accommodates
+    - bathrooms
+    - bedrooms
+    - beds
+    - minimum_nights_avg_ntm
+    - availability_365
+    - availability_90
+    - number_of_reviews_ltm
+    - review_scores_location
+    - reviews_per_month
+    - property_type
+    - latitude
+    - longitude
+    - amenities
+    - description
+    - bathrooms_text
+    - price
+
 ## Methodology
 ### Data Cleaning
 ### EDA and FE
