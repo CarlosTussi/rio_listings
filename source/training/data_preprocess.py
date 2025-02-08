@@ -25,6 +25,7 @@ from source.config import *
 '''
 def pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
 
+
     # Dropping 'na' for prices
     df = df.dropna(subset = target)
 

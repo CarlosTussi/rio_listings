@@ -27,7 +27,7 @@ AMENITIES_REGEX_FT = { "parking": ".*parking on premises.*",
 # Description
 DESCRIPTION_LUXWORDS_FT = ["lux","luxurious","luxury","fancy","garage", 
                         "hydromassage", "cellar", "sophistication", 
-                        "magnificent", "colonial", "rooftop", "triplex", "suite"]
+                        "magnificent", "colonial", "rooftop", "triplex", "suite"]#,pool]    
 
 
 # Capacity limits:
@@ -71,11 +71,11 @@ CAT_VAL_IMP = [("bathrooms_text", "Private bath"),
 
 FEATURES_TO_DROP = ["calendar_updated", "license", "neighbourhood_group_cleansed","neighbourhood_cleansed", "neighbourhood", 
                     "neighborhood_overview", "last_scraped", "source", "first_review", "last_review", "name", 
-                    "number_of_reviews_l30d", "number_of_reviews", "availability_30", 
-                    "minimum_nights", "maximum_nights", "review_scores_value", "review_scores_accuracy", 
+                    "number_of_reviews_l30d", "number_of_reviews", "availability_30",
+                    "minimum_nights", "maximum_nights", "review_scores_accuracy", "review_scores_location", 
                     "review_scores_rating", "review_scores_checkin", "review_scores_cleanliness", "review_scores_communication",
                     "has_availability", "instant_bookable", "calendar_last_scraped", 'minimum_minimum_nights', 'maximum_minimum_nights', 'minimum_maximum_nights', 
-                    'maximum_maximum_nights', 'maximum_nights_avg_ntm', 'property_type', 'description']
+                    'maximum_maximum_nights', 'maximum_nights_avg_ntm', 'property_type', 'description', 'is_score_empty']
 
 # Extra features not relevant that contain the following patterns
 FEATURES_TO_DROP_REGEX = ".*host.*|.*id.*|.*url.*"
