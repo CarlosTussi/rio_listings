@@ -552,7 +552,7 @@ class ExtractBathroom(BaseEstimator, TransformerMixin):
 
         print("Start - ExtractBathroom")
         
-        def bathroom_number(a_bath):
+        def detect_bathroom_shared(a_bath):
             
             is_shared = 0 #default value
 
@@ -570,7 +570,7 @@ class ExtractBathroom(BaseEstimator, TransformerMixin):
             
     
 
-        X[["is_bathroom_shared"]] = X["bathrooms_text"].apply(lambda x: pd.Series(bathroom_number(x)))
+        X[["is_bathroom_shared"]] = X["bathrooms_text"].apply(lambda x: pd.Series(detect_bathroom_shared(x)))
         
         X = X.drop("bathrooms_text", axis = 1)
         
