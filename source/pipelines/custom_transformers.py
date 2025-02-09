@@ -615,7 +615,7 @@ class ExtractScore(BaseEstimator, TransformerMixin):
         
         print("Start - ExtractScore")
         
-        X["is_score_empty"] = X.review_scores_location.apply(lambda x: 1 if x != 0 else 0)
+        X["is_score_empty"] = X.review_scores_value.apply(lambda x: 1 if x != 0 else 0)
       
         print("End - ExtractScore")
         

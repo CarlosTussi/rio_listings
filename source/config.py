@@ -83,8 +83,8 @@ FEATURES_TO_DROP_REGEX = ".*host.*|.*id.*|.*url.*"
 
 #Grid Search Parameters
 GRID_SEARCH_PARAM = {
-                    'loss': ["poisson"],
-                    'max_iter': [100,200,300],
+                    'loss': ["poisson", "squared_error"],
+                    'max_iter': [150,200,300],
                     'learning_rate': [0.05, 1],
                     'max_leaf_nodes': [71,81,91],
                     'max_features': [0.15,0.2,0.25]
@@ -129,7 +129,7 @@ AMENITIES_GUI = [
                 ("BBQ Grill", "has_bbq_grill"),
                 ("Outdoor Area", "has_outdoor"),
                 ("Bathtub", "has_bathtub"),
-                ("Hot tub", "has_hot_tub"),
+                ("Jacuzzi", "has_jacuzzi"),
                 ("AC", "has_ac"),
                 ("Seaview", "has_seaview"),
                 ]

@@ -263,10 +263,25 @@ def number_of_nights_component():
 
     st.subheader("5) Number of Nights: ")
 
-    availability_365 = st.number_input(
-    "Number of nights available in the next 365 days : ", min_value = 1, max_value = 356, value=1, placeholder="Type available nights in a year..."
-)
-    update_total_value("availability_365", availability_365)
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        availability_60 = st.number_input(
+            "Number of nights available in the next 60 days : ", min_value = 0, max_value = 30, value=1, placeholder="Type available nights in 60 days..."
+        )
+        update_total_value("availability_60", availability_60)
+    
+    with col2:
+        availability_90 = st.number_input(
+            "Number of nights available in the next 90 days : ", min_value = 0, max_value = 90, value=1, placeholder="Type available nights in 90 days ..."
+        )
+        update_total_value("availability_90", availability_90)
+
+    with col3:
+        availability_365 = st.number_input(
+            "Number of nights available in the next 365 days : ", min_value = 0, max_value = 356, value=1, placeholder="Type available nights in the next year..."
+        )
+        update_total_value("availability_365", availability_365)
 
     minimum_nights_avg_ntm = st.selectbox(
             "Minimum nights: ",
@@ -299,14 +314,14 @@ def reviews_component():
 )
     update_total_value("reviews_per_month", reviews_per_month, "float")
      
-    review_scores_location = st.number_input(
-    "Review Location Score : ", min_value = 0.0, max_value = 5.0, value=0.0, placeholder="Type the review score for the location..."
+    review_scores_value = st.number_input(
+    "Review Value Score : ", min_value = 0.0, max_value = 5.0, value=0.0, placeholder="Type the review score for property value..."
      )
 
-    update_total_value("review_scores_location", review_scores_location, "float")
+    update_total_value("review_scores_value", review_scores_value, "float")
      
     # Feature (flag) indicating absence of reviews
-    if(review_scores_location == 0):
+    if(review_scores_value == 0):
         st.session_state["model_input"].update({"is_score_empty": 1})
 
 
