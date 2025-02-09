@@ -58,7 +58,7 @@ def model_training(X_train: list, y_train: np.array, grid_search_on = False) -> 
         # Initialize model with the best parameters  
         model = HistGradientBoostingRegressor(random_state = 19,
                                             loss = "poisson",
-                                            learning_rate = 0.05,
+                                            learning_rate = 0.04,
                                             max_features = 0.2,
                                             max_iter = 300,
                                             max_leaf_nodes= 81)
