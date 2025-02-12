@@ -11,6 +11,8 @@
 '''
 
 import joblib
+import os
+import time
 from source.app.gui import *
 from source.config import *
 
@@ -28,7 +30,14 @@ if __name__ == "__main__":
     # Data Normalisation model
     scaler_transf_model = joblib.load(SCALER_MODEL_PATH)
 
+    price_model_name = type(price_pred_model).__name__
+    price_model_last_modified = time.ctime(os.path.getmtime(MAIN_PRED_MODEL_PATH))
+
     #######
     # GUI #
     #######
-    gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model)
+    gui(price_pred_model, 
+        geo_cluster_pred_model, 
+        scaler_transf_model, 
+        price_model_name, 
+        price_model_last_modified)

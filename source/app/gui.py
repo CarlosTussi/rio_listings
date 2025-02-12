@@ -29,7 +29,7 @@ import regex as re
 '''
 def map_component():
 
-    st.subheader("1) Click on the location on the map: ")
+    st.subheader("Indicate property location on the map", divider="blue")
 
     marker_location = RIO_COORDINATES 
     
@@ -88,7 +88,7 @@ def has_item_component():
     
     amenities = AMENITIES_GUI
 
-    st.subheader("2) Select the presence of any of these amenities: ")
+    st.subheader("Select if amenities available ", divider="blue")
 
     # Divide the amenitites in 3 columns for beetter visualisation
     col1, col2, col3 = st.columns(3)
@@ -172,7 +172,7 @@ def update_total_value(feature_name, value, type = "int"):
         
 '''
 def capacity_component():
-    st.subheader("3) Select the maximum capacities: ")
+    st.subheader("Select the maximum capacities ", divider="blue")
 
 
     col1, col2 = st.columns(2)
@@ -230,7 +230,7 @@ def capacity_component():
 '''
 def property_type_component():
 
-    st.subheader("4) Select the property type: ")
+    st.subheader("Select the property type ", divider="blue")
 
     property_type = st.radio(
             "Property Type ?",
@@ -261,7 +261,7 @@ def property_type_component():
 '''
 def number_of_nights_component():
 
-    st.subheader("5) Number of Nights: ")
+    st.subheader("Define the following number of nights ", divider="blue")
 
     col1, col2, col3 = st.columns(3)
     
@@ -284,7 +284,7 @@ def number_of_nights_component():
         update_total_value("availability_365", availability_365)
 
     minimum_nights_avg_ntm = st.selectbox(
-            "Minimum nights: ",
+            "Minimum nights per stay: ",
             ([str(x) for x in range(1,MIN_NIGHTS_LIM_FT)] +[str(MIN_NIGHTS_LIM_FT)+"+"]),
         )
     update_total_value("minimum_nights_avg_ntm", minimum_nights_avg_ntm)
@@ -302,7 +302,7 @@ def number_of_nights_component():
 
 '''
 def reviews_component():
-    st.subheader("6) Reviews: ")
+    st.subheader("Define the following reviews' information ", divider="blue")
 
     numnumber_of_reviews_ltm = st.number_input(
     "Number of reviews in the last 12 months : ", min_value = 0, value=0, placeholder="Type the number of reviews in the last 12 months..."
@@ -336,8 +336,10 @@ def reviews_component():
 
 '''
 def description_component():
+    st.subheader("Property description", divider="blue")
+
     text_area = st.text_area(
-        "Property description",
+        "Describe your property",
         placeholder="Property description in english",
         height = 200,
     )
@@ -370,6 +372,7 @@ def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_mo
 
     # Buttons to run the model or reset
     col1, col2 = st.columns(2)
+    predicted_price = 0.0
 
     # Predict final price
     if col1.button("Predict Rental Price", type="primary", use_container_width=True):
@@ -378,12 +381,6 @@ def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_mo
         # Preprocess Data #
         ###################
         predicted_price = process_and_predict(df_model_input, price_pred_model, geo_cluster_pred_model, scaler_transf_model)
-
-        #####################
-        # Display the price #
-        #####################
-        st.header("Predicted Price")
-        st.metric(label = " ", value = f"R${predicted_price:.2f}")
     
 
     # Reset all input
@@ -391,7 +388,23 @@ def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_mo
         #TO-DO
         pass
 
+    #####################
+    # Display the price #
+    #####################
+    st.header("")
+    container = st.container(border=True, key = "price-container")
+    container.header("Predicted Price", divider="red")
+    container.metric(label = " ", value = f"R${predicted_price:.2f}")
 
+    # Adding custom CSS just to better align the price in the container
+    st.markdown("""
+                <style>
+                    .st-key-price-container{
+                        text-align: center;
+                    }
+                </style>
+                """, unsafe_allow_html=True)
+    st.header("")
 '''
     def df_component(df_display)
     ----------------------------
@@ -404,6 +417,8 @@ def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_mo
 
 '''
 def df_component(df_display):
+
+    st.subheader("Input Data", divider="grey")
     # Display the dataframe used in the model
     col1, col2, col3 = st.columns(3)
 
@@ -424,22 +439,36 @@ def df_component(df_display):
       *****
         - price_pred_model : HistGradientBoostingRegressor()    # Trained model
         - geo_cluster_pred_model : KMeans()                     # Trained model
-        - scaler_transf_model : MaxMinScaler()                  # Trained model    
+        - scaler_transf_model : MaxMinScaler()                  # Trained model   
+        - price_model_name                                      # Name of the price model being used
+        - price_model_last_modified                             # Date of last model update
 
 
 '''
-def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model):
+def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model, price_model_name, price_model_last_modified):
+
+    st.set_page_config(page_title="Rio Rental Predictor")
+    #################
+    # PROJECT TITLE #
+    #################
+    st.title("Rio Rental Predictor")
 
     # State variable that will contain user's input
     model_input = {}
     if "model_input" not in st.session_state:
         st.session_state["model_input"] = model_input
 
-
-    #################
-    # PROJECT TITLE #
-    #################
-    st.title("Rio rental price predictor")
+    #######################
+    # INFORMATION SIDEBAR #
+    #######################
+    with st.sidebar:
+        st.header("About")
+        st.write("* Rio de Janeiro property rental price predictor")
+        st.write("* More information: https://github.com/CarlosTussi/rio_listings")
+        st.header("Model Used")
+        st.write({price_model_name})
+        st.header("Model Last Modified")
+        st.write({price_model_last_modified})
 
 
     ########################
