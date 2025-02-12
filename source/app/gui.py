@@ -375,18 +375,13 @@ def buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_mo
     predicted_price = 0.0
 
     # Predict final price
-    if col1.button("Predict Rental Price", type="primary", use_container_width=True):
+    if col2.button("Predict Rental Price", type="primary", use_container_width=True):
         
         ###################
         # Preprocess Data #
         ###################
         predicted_price = process_and_predict(df_model_input, price_pred_model, geo_cluster_pred_model, scaler_transf_model)
     
-
-    # Reset all input
-    if col2.button("Reset", type="secondary"):
-        #TO-DO
-        pass
 
     #####################
     # Display the price #
@@ -420,15 +415,15 @@ def df_component(df_display):
 
     st.subheader("Input Data", divider="grey")
     # Display the dataframe used in the model
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1.5,2,2])
 
 
     with col1:
         st.dataframe(df_display.iloc[0:10, :])
     with col2:
-        st.dataframe(df_display.iloc[10:20, :])
+        st.dataframe(df_display.iloc[10:20, :], use_container_width = True)
     with col3:
-        st.dataframe(df_display.iloc[20:, :])
+        st.dataframe(df_display.iloc[20:, :], use_container_width = True)
 
 '''
     def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model)
@@ -462,18 +457,23 @@ def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model, price_mod
     # INFORMATION SIDEBAR #
     #######################
     with st.sidebar:
-        st.header("About")
-        st.write("* Rio de Janeiro property rental price predictor")
-        st.write("* More information: https://github.com/CarlosTussi/rio_listings")
+        st.title("Rio de Janeiro, Brazil")
+        st.write("Rental Predictor")
+        st.divider()
         st.header("Model Used")
-        st.write({price_model_name})
+        st.caption(f"* _{price_model_name}_")
         st.header("Model Last Modified")
-        st.write({price_model_last_modified})
+        st.caption(f"* _{price_model_last_modified}_")
+        st.divider()
+        st.header("About")
+        st.write("* For project details click [here](%s)" % "https://github.com/CarlosTussi/rio_listings")
+        st.write("* Please check the license [here](%s)" % "https://github.com/CarlosTussi/rio_listings/blob/main/LICENSE")
+        
+        
 
-
-    ########################
-    # INTERFACE COMPONENTS #
-    ########################
+    #############################
+    # MAIN INTERFACE COMPONENTS #
+    #############################
     map_component()
     has_item_component()
     capacity_component()
@@ -485,6 +485,7 @@ def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model, price_mod
     # Model Input as a Data Frame
     df_model_input = pd.DataFrame(st.session_state["model_input"], index = ["features"])
     buttons_component(price_pred_model, geo_cluster_pred_model, scaler_transf_model, df_model_input)
+
 
     # Data frame that will be display to the user before its transformations
     df_display = df_model_input.copy().T
