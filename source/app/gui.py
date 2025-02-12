@@ -467,7 +467,7 @@ def gui(price_pred_model, geo_cluster_pred_model, scaler_transf_model, price_mod
         st.divider()
         st.header("About")
         st.write("* For project details click [here](%s)" % "https://github.com/CarlosTussi/rio_listings")
-        st.write("* Please check the license [here](%s)" % "https://github.com/CarlosTussi/rio_listings/blob/main/LICENSE")
+        st.write("* Please check the license [here](%s)" % "https://github.com/CarlosTussi/rio_listings?tab=MIT-1-ov-file")
         
         
 
