@@ -104,6 +104,7 @@ High level overview of project architecture.
 #### Scaling
 - MaxMinScaler()
 ### Model
+![alt text](misc/modeltraining.png)
 - *LinearRegression()*
 - *RandomForestRegressor()*
 - *SVR()*
