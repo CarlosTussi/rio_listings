@@ -115,7 +115,9 @@ High level overview of project architecture.
 - Metrics used and why
 ## Application
 - Disclamer: The focous of this project was the model training an integration. The user interface is just meant to be an example of that integration, without paying much attention to design principles and user interface guidelines. (My apologies for the experts in the domain.)
-- [Images of the webapp]
+![alt text](misc/webapp1.png)
+![alt text](misc/webapp2.png)
+![alt text](misc/webapp3.png)
 - Technology used: streamline
 - Click map, default values, price at the end, etc etc
 ## Installation
