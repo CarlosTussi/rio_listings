@@ -57,10 +57,10 @@ Airbnb Propeprty Price Predictor
     - *price*
 ## Project Overview
 High level overview of project architecture.
-![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
+![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png?)
 ## Training
 ### Data Preprocessing
-![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/preprocessing.png)
+![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/preprocessing.png?)
 
  - Data Preparation Models
     - *KMeans()*
@@ -104,7 +104,7 @@ High level overview of project architecture.
 #### Scaling
 - MaxMinScaler()
 ### Model
-![alt text](misc/modeltraining.png)
+![alt text](misc/modeltraining.png?)
 - *LinearRegression()*
 - *RandomForestRegressor()*
 - *SVR()*
