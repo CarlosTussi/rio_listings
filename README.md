@@ -123,12 +123,13 @@ High level overview of project architecture.
 
 - _Disclamer: The focous of this project was the model training an its integration into an application. The user interface is meant to be an example of a final product of that integration, without paying much attention to design principles and user interface guidelines. (My apologies for the experts in the domain.)_
 
+Landing page containing a sidebar with project and model information on the left and the start of user input fields:
 ![alt text](misc/webapp1.png)
-Landing page containing a sidebar with project and model information on the left and the start of user input fields.
+Show the price predicted for the input data given by the user:
 ![alt text](misc/webapp2.png)
-Show the price predicted for the input data given by the user.
+Show the recap to the user of the input data:
 ![alt text](misc/webapp3.png)
-Show the recap to the user of the input data.
+
 ## Installation
 - The code in its entirety can be clonned from GitHub.
 - (!) The dataset, as mentioned before, needs to be downloaded from the source, as advised by Inside Airbnb. 
@@ -177,14 +178,14 @@ Show the recap to the user of the input data.
       streamlit run .\source\app\main.py
       ```
 ## Limitations
-- Price:
+- **Price:**
     * The model has been trained with price values in the following range: (0,850]
     * Values originaly larger than R$850,00 were capped to 850. Therefore, when a property has an estimated value of R$850,00, it should be read, in reality, as a price >= R$850,00.
     * The following charts show the price distribution before and after capping.
     ![alt text](misc/densitybefore.png) ![alt text](misc/densityafter.png)
 
 
-- Other capped values:
+- **Other capped values:**
     * As with the price, the value for the following features were capped to better generalize and deal with the outliers (more details on the EDA-FE.ipynb in the notebook's folder.).
     * Once again, the capped limit indicates that the predicted value can be >= to that limit.
         - bathrooms: [0, 5],
@@ -201,12 +202,12 @@ Show the recap to the user of the input data.
         - maximum_minimum_nights: [0, 6],
         - minimum_nights_avg_ntm: [0, 5],
 
-- Neighbourhoods:
+- **Neighbourhoods:**
     * Instead of analysing properties in their respective neighbourhoods, they were grouped into clusters according to their coordinates as explaiend before, given the imbalance between property and neighbourhoods as shown in the pie chart bellow.
     ![alt text](misc/piehoods.png)
 
 
-- Seasonality:
+- **Seasonality:**
     * The model does not take into consideration seasonality for the moment which could improve the model. (Ex: Carnival season)
 
 ## Future Versions
