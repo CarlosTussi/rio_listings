@@ -114,15 +114,24 @@ High level overview of project architecture.
 ### Evaluation
 - Metrics used and why
 ## Application
-- Disclamer: The focous of this project was the model training an integration. The user interface is just meant to be an example of that integration, without paying much attention to design principles and user interface guidelines. (My apologies for the experts in the domain.)
+- The application was made using Streamlit’s open-source framework: 
+    * Version: 1.42.0
+    * For more information and documentation, you can check their website [here](https://streamlit.io/).
+    * For the map functionality, the streamlit-folium open source package was used: 
+        * Version: 0.24.0
+        * For more information and documentation, you can check their website: [here](https://folium.streamlit.app/).
+
+- _Disclamer: The focous of this project was the model training an its integration into an application. The user interface is meant to be an example of a final product of that integration, without paying much attention to design principles and user interface guidelines. (My apologies for the experts in the domain.)_
+
 ![alt text](misc/webapp1.png)
+Landing page containing a sidebar with project and model information on the left and the start of user input fields.
 ![alt text](misc/webapp2.png)
+Show the price predicted for the input data given by the user.
 ![alt text](misc/webapp3.png)
-- Technology used: streamline
-- Click map, default values, price at the end, etc etc
+Show the recap to the user of the input data.
 ## Installation
 - The code in its entirety can be clonned from GitHub.
-- (!) The dataset, as mentioned before, needs to be downloaded from the source, as requested by Inside Airbnb. 
+- (!) The dataset, as mentioned before, needs to be downloaded from the source, as advised by Inside Airbnb. 
 ### Download
 *Python Version: 3.12.9*
 1. Clone the repository
@@ -168,13 +177,44 @@ High level overview of project architecture.
       streamlit run .\source\app\main.py
       ```
 ## Limitations
-- Price max 850 (before and after chart ?)
-- Capped values (#+) (before and after chart ?)
-- Pie chart with % and most frequent neighbourhoods.
-- Seasonality (high season x low season prices) = conplexity in achieving model improvement
+- Price:
+    * The model has been trained with price values in the following range: (0,850]
+    * Values originaly larger than R$850,00 were capped to 850. Therefore, when a property has an estimated value of R$850,00, it should be read, in reality, as a price >= R$850,00.
+    * The following charts show the price distribution before and after capping.
+    ![alt text](misc/densitybefore.png) ![alt text](misc/densityafter.png)
+
+
+- Other capped values:
+    * As with the price, the value for the following features were capped to better generalize and deal with the outliers (more details on the EDA-FE.ipynb in the notebook's folder.).
+    * Once again, the capped limit indicates that the predicted value can be >= to that limit.
+        - bathrooms: [0, 5],
+        - bedrooms: [0, 5],
+        - beds: [0, 8],
+        - accommodates: [0, 10],
+        - number_of_reviews: [0, 10],
+        - number_of_reviews_l30d: [0, 2.5],
+        - reviews_per_month: [0, 4],
+        - number_of_reviews_ltm: [0, 30],
+        - minimum_nights: [0, 5],
+        - maximum_nights: [0, 800],
+        - minimum_minimum_nights: [0, 5],
+        - maximum_minimum_nights: [0, 6],
+        - minimum_nights_avg_ntm: [0, 5],
+
+- Neighbourhoods:
+    * Instead of analysing properties in their respective neighbourhoods, they were grouped into clusters according to their coordinates as explaiend before, given the imbalance between property and neighbourhoods as shown in the pie chart bellow.
+    ![alt text](misc/piehoods.png)
+
+
+- Seasonality:
+    * The model does not take into consideration seasonality for the moment which could improve the model. (Ex: Carnival season)
 
 ## Future Versions
-- Deeper analysis of description and amenities text to improve correlation while avoiding overfitting
-- Retrain the model with new data (new properties)
-- CV for the different model trainings before the grid search
+Here are some ideas and suggestions for future versions:  
+- Periodically retrieve more data with new and updated properties when they get released on Insde Airbnb's website.
+    * Take seasonality into consideration (summer holidays, carvinal, etc.)
+    * Augmentation of our training data to better represent the problem space.
+- Deeper analysis of description and amenities strings to improve correlation while avoiding overfitting.
+- Cross validation technique for the best model selection phase and not only with GridSearchCV as it was done on this project. 
+
 
