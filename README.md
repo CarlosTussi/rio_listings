@@ -9,11 +9,7 @@ Airbnb Propeprty Price Predictor
         - [Features](#features)
 - [Project Overview](#project-overview) 
 - [Training](#methodology)
-    - [Data Preprocessing](#data-preprocessing)
-        - [Data Cleaning](#data-cleaning)
-        - [Feature Extraction](#feature-extraction)
-        - [Feature Selection](#feature-selection)
-        - [Scaling](#scaling)
+    - [Data Preprocessing Pipeline](#data-preprocessing-pipeline)
     - [Model](#model)
     - [Evaluation](#evaluation)
 - [Application](#methodology)
@@ -21,12 +17,12 @@ Airbnb Propeprty Price Predictor
     - [Download](#installation)
     - [Usage](#usage)
 - [Limitations](#limitations)
-- [Future Versions](#future)
+- [Future Versions](#future-versions)
 
 ## About
-    - The goal of this project was to train an Airbnb property rental price prediction model in the city of Rio de Janeiro, Brazil.
-    - This is a scientific and academic project and not designed for commercial purposes.
-    - MIT License.
+- The goal of this project was to train an Airbnb property rental price prediction model in the city of Rio de Janeiro, Brazil.
+- This is a scientific and academic project and not designed for commercial purposes.
+- MIT License.
 ## Data
 ### Source
 - The training data set was sourced from [Inside Airbnb](https://insideairbnb.com/get-the-data/) and can be found on this [link](https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-06-27/data/listings.csv.gz).
@@ -56,24 +52,37 @@ Airbnb Propeprty Price Predictor
     - *bathrooms_text*
     - *price*
 ## Project Overview
+
+The two main folers in this repository that can be consulted to have a more detail vision of this projects are:
+
+- [notebooks](notebooks/): Contain all the initial insights, data exploration, model selection and evaluation.
+- [source](source/): Contain a full python implementation for the whole project, including training with its pipelines and the application.
+
 High level overview of project architecture.
 ![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
 ## Training
-### Data Preprocessing
+### Data Preprocessing Pipeline
+The diagram bellow illustrates the main data preprocessing pipeline:
 ![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/preprocessing.png)
 
- - Data Preparation Models
-    - *KMeans()*
-    - *MaxMinScaler()*
-#### Data Cleaning
-    - Nas - what was done
-    - Outlier - what was done
-#### Feature Extraction
- - (Non-binary features)
+1) Data Cleaning
+    * NAs:
+        - NAs were imputed with a custom values or dropped depending on the case.
+            * _price_: NAs were dropped, since price is our target feature.
+            * _reviews' features_: NAs replace with 0 indicating the absence of reviews.
+            * _score's features_: NAs replaces with 0 indicating as well the absence of rating in that category. OBS: A property can never have a score 0 as the minimum "star" is 1 for properties with the lowest possible rates. In this case the 0 could possibly introduce a ranking order that could confuse the model. It was not observed any considerable impact, however.
+            * _bathroom, bedrooms and beds_: NAs were penalized with 0.
+            * _description_: NAs simply replaced with empty string, indiccating the absence of a description for the property.
+    * Outliers: 
+        - Any row exceeding a maximum pre-determined value for select features were capped and assigned that maximum value.
+        - For a complete list, check [Limitations](#limitations) section.
+
+2) Feature Extraction
+- **Non-binary features**
     * Extracted from 'latitude/longitude' with KMeans a model
         - *geo_location*           
 
- - (Binary features)
+ - **Binary features**
     * Encoded from 'room_type':
         - *is_entire_home*           
         - *is_private_room*
@@ -98,13 +107,24 @@ High level overview of project architecture.
         - *has_bathtub*
         - *has_ac*
         - *has_seaview*
+3) Feature Selection
+- This step simply removes the features not relevant to the problem.
+- If more features are automatically extracted in future versions, this step could contain a more sophisticated feature selection such as dropping low correlations or reduntant features
+4) Scaling
+- Since some of the models are sensitive to the difference in the magnitude of the data (SVM and Neural Networks for example), a step to scale the data was added at the end of the pipeline:
+    * MaxMinScaler()
 
-#### Feature Selection
-- Dropping columns
-#### Scaling
-- MaxMinScaler()
 ### Model
+
+- In order to achieve the final model, the following steps were necessary:
 ![alt text](misc/modeltraining.png)
+
+1) Preprocessed Data Split
+2) Multiple models training with training data
+3) Models evaluation with test data 
+4) Best model selection
+5) GridSearch with Cross validation with best model
+6) Final Model
 
 ### Evaluation
 - To evaluate and determine the best model, different regression models were evaluated with different versions of the dataset based on its encoding method for some of its categorical features.
