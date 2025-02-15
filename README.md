@@ -252,8 +252,9 @@ Show the recap to the user of the input data:
     * Values originaly larger than R$850,00 were capped to 850. Therefore, when a property has an estimated value of R$850,00, it should be read, in reality, as a price >= R$850,00.
     * The following charts show the price distribution before and after capping.
   
+  <div style=" width: 100px; height: 100px; float: left;">
     ![alt text](misc/densitybefore.png) | ![alt text](misc/densityafter.png)
-
+</div>
 
 - **Other capped values:**
     * As with the price, the value for the following features were capped to better generalize and deal with the outliers (more details on the EDA-FE.ipynb in the notebook's folder.).
