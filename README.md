@@ -1,4 +1,4 @@
-Airbnb Propeprty Price Predictor 
+# Airbnb Propeprty Price Predictor 
 
 ## Table of Contents
 - [About](#about)
@@ -58,11 +58,18 @@ The two main folers in this repository that can be consulted to have a more deta
 - [notebooks](notebooks/): Contain all the initial insights, data exploration, model selection and evaluation.
 - [source](source/): Contain a full python implementation for the whole project, including training with its pipelines and the application.
 
-High level overview of project architecture.
+High level overview of project architecture:
+
 ![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
+
+ 1) Training stage. 
+ 2) Models generated from the training stage to be used in the App stage.
+ 3) App stage.
+
 ## Training
 ### Data Preprocessing Pipeline
 The diagram bellow illustrates the main data preprocessing pipeline:
+
 ![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/preprocessing.png)
 
 1) Data Cleaning
