@@ -124,6 +124,7 @@ The diagram bellow illustrates the main data preprocessing pipeline:
 ### Model
 
 - In order to achieve the final model, the following steps were necessary:
+
 ![alt text](misc/modeltraining.png)
 
 1) Preprocessed Data Split
@@ -183,11 +184,20 @@ The diagram bellow illustrates the main data preprocessing pipeline:
 - _Disclamer: The focous of this project was the model training an its integration into an application. The user interface is meant to be an example of a final product of that integration, without paying much attention to design principles and user interface guidelines. (My apologies for the experts in the domain.)_
 
 Landing page containing a sidebar with project and model information on the left and the start of user input fields:
+
 ![alt text](misc/webapp1.png)
+
+
 Show the price predicted for the input data given by the user:
+
 ![alt text](misc/webapp2.png)
+
+
 Show the recap to the user of the input data:
+
 ![alt text](misc/webapp3.png)
+
+
 
 ## Installation
 - The code in its entirety can be clonned from GitHub.
@@ -241,7 +251,8 @@ Show the recap to the user of the input data:
     * The model has been trained with price values in the following range: (0,850]
     * Values originaly larger than R$850,00 were capped to 850. Therefore, when a property has an estimated value of R$850,00, it should be read, in reality, as a price >= R$850,00.
     * The following charts show the price distribution before and after capping.
-    ![alt text](misc/densitybefore.png) ![alt text](misc/densityafter.png)
+  
+    ![alt text](misc/densitybefore.png) | ![alt text](misc/densityafter.png)
 
 
 - **Other capped values:**
@@ -263,6 +274,7 @@ Show the recap to the user of the input data:
 
 - **Neighbourhoods:**
     * Instead of analysing properties in their respective neighbourhoods, they were grouped into clusters according to their coordinates as explaiend before, given the imbalance between property and neighbourhoods as shown in the pie chart bellow.
+    
     ![alt text](misc/piehoods.png)
 
 
