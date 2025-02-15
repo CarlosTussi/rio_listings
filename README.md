@@ -251,10 +251,10 @@ Show the recap to the user of the input data:
     * The model has been trained with price values in the following range: (0,850]
     * Values originaly larger than R$850,00 were capped to 850. Therefore, when a property has an estimated value of R$850,00, it should be read, in reality, as a price >= R$850,00.
     * The following charts show the price distribution before and after capping.
-  
-  <div style=" width: 100px; height: 100px; float: left;">
-    ![alt text](misc/densitybefore.png) | ![alt text](misc/densityafter.png)
-</div>
+
+
+    <img src="misc/densitybefore.png" alt="Alt Text" style="width:50%; height:auto;"> | <img src="misc/densityafter.png" alt="Alt Text" style="width:50%; height:auto;">
+
 
 - **Other capped values:**
     * As with the price, the value for the following features were capped to better generalize and deal with the outliers (more details on the EDA-FE.ipynb in the notebook's folder.).
@@ -275,7 +275,6 @@ Show the recap to the user of the input data:
 
 - **Neighbourhoods:**
     * Instead of analysing properties in their respective neighbourhoods, they were grouped into clusters according to their coordinates as explaiend before, given the imbalance between property and neighbourhoods as shown in the pie chart bellow.
-    
     ![alt text](misc/piehoods.png)
 
 
