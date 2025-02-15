@@ -8,12 +8,12 @@
         - [Data Dictionary](#data-dictionary)
         - [Features](#features)
 - [Project Overview](#project-overview) 
-- [Training](#methodology)
+- [Training](#training)
     - [Data Preprocessing Pipeline](#data-preprocessing-pipeline)
     - [Model](#model)
     - [Evaluation](#evaluation)
-- [Application](#methodology)
-- [Installation](#implementation) 
+- [Application](#application)
+- [Installation](#installation) 
     - [Download](#installation)
     - [Usage](#usage)
 - [Limitations](#limitations)
@@ -60,7 +60,7 @@ The two main folers in this repository that can be consulted to have a more deta
 
 High level overview of project architecture:
 
-![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/diagram.png)
+![alt text](misc/diagram.png)
 
  1) Training stage. 
  2) Models generated from the training stage to be used in the App stage.
@@ -70,7 +70,7 @@ High level overview of project architecture:
 ### Data Preprocessing Pipeline
 The diagram bellow illustrates the main data preprocessing pipeline:
 
-![alt text](https://github.com/CarlosTussi/rio_listings/blob/main/misc/preprocessing.png)
+![alt text](misc/preprocessing.png)
 
 1) Data Cleaning
     * NAs:
@@ -253,7 +253,7 @@ Show the recap to the user of the input data:
     * The following charts show the price distribution before and after capping.
 
 
-    <img src="misc/densitybefore.png" alt="Alt Text" style="width:50%; height:auto;"> | <img src="misc/densityafter.png" alt="Alt Text" style="width:50%; height:auto;">
+    <img src="misc/densitybefore.png" alt="Alt Text" style="width:45%; height:auto;">  <img src="misc/densityafter.png" alt="Alt Text" style="width:48%; height:auto;">
 
 
 - **Other capped values:**
