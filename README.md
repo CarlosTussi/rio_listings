@@ -105,14 +105,46 @@ High level overview of project architecture.
 - MaxMinScaler()
 ### Model
 ![alt text](misc/modeltraining.png)
-- *LinearRegression()*
-- *RandomForestRegressor()*
-- *SVR()*
-- *SGDRegressor()*
-- *MLPRegressor()*
-- *HistGradientBoostingRegressor()*
+
 ### Evaluation
-- Metrics used and why
+- To evaluate and determine the best model, different regression models were evaluated with different versions of the dataset based on its encoding method for some of its categorical features.
+- All the results were compared using the bellow metrics.
+- Finally, for the best model, additional optimisation technique was implemented to find the best combination of hyperparameters.
+
+**Models**
+- A varierty of linear, decision trees, support vector, neural network and ensemble methods were used in order to determine the best model.
+- The following models were used:
+    - *LinearRegression()*
+    - *RandomForestRegressor()*
+    - *SVR()*
+    - *SGDRegressor()*
+    - *MLPRegressor()*
+    - *HistGradientBoostingRegressor()*
+
+**Encoding**
+- The different types of encoding techniques used were:
+    - *Label Encoding*
+    - *One-Hot-Encoding*
+    - *Binary Encoding*
+
+**Metrics**
+- 
+- To determine the best model:
+    * R2: How well the model explains the variance of the data.
+
+- In addition, the following metrics were calculated for further reference and analysis of the models:
+    * MAE: The average absolute difference of predicted and actual values.
+    * RMSE: Also measures the average error, but penalising outliers.
+
+![alt text](misc/metrics.png)
+
+
+**Best Model**
+- For the best model, GridSearch with cross validation technique was used to try to optimise it.
+- The model with that achieved the best results so far was the *HistGradientBoostingRegressor()*, with an R2 score of 0.65.
+- The last section os this document proposes ideas for future versions that have not been implemented yet aiming to improve this value.
+
+
 ## Application
 - The application was made using Streamlit’s open-source framework: 
     * Version: 1.42.0
