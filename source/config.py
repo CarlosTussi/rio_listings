@@ -133,3 +133,30 @@ AMENITIES_GUI = [
                 ("AC", "has_ac"),
                 ("Seaview", "has_seaview"),
                 ]
+
+DEFAULT_INPUT = {  
+                'accommodates' : 1,
+                'bathrooms' : 1,
+                'bedrooms': 1,
+                'beds' : 1,
+                'minimum_nights_avg_ntm': 1,
+                'availability_60' : 1,
+                'availability_90' : 1,
+                'availability_365' : 1,
+                'number_of_reviews_ltm' : 0,
+                'review_scores_value': 0,
+                'reviews_per_month': 0,
+                'has_parking': 0,
+                'has_pool': 0, 
+                'has_washer': 0,
+                'has_dishwasher': 0, 
+                'has_ceiling_fan': 0, 
+                'has_long_term': 0, 
+                'has_bbq_grill': 0,
+                'has_outdoor': 0, 
+                'has_jacuzzi': 0, 
+                'has_bathtub': 0, 
+                'has_ac': 0, 
+                'has_seaview': 0,
+                'is_bathroom_shared': 0
+}

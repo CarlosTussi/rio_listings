@@ -16,7 +16,7 @@
     * Initial sketch for EDA and FE.
 
 
-> [!IMPORTANT]
+> IMPORTANT
 
 _OBS 1: The notebooks are not the official version. The official and upodated version is the code found in the source folder._ 
 

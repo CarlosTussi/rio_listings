@@ -101,7 +101,7 @@ data_cleaning_pipeline = Pipeline([
     #Imputers
     ("num_imputer", NumImputer(value = NUM_VAL_IMP)),
     ("cat_imputer", CatImputer(
-                            features_limits = CAT_VAL_IMP)),
+                            features_replace = CAT_VAL_IMP)),
     #Outliers
     ("num_outliers", OutlierRemover(
                                 features_limit = [

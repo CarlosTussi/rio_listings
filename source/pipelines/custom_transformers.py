@@ -652,8 +652,8 @@ class ExtractScore(BaseEstimator, TransformerMixin):
   
 '''
 class CatImputer(BaseEstimator, TransformerMixin):
-    def __init__(self, features_limits):
-        self.features_limits = features_limits
+    def __init__(self, features_replace):
+        self.features_replace = features_replace
 
         self.imputers = {}
 
@@ -663,7 +663,7 @@ class CatImputer(BaseEstimator, TransformerMixin):
 
 
         # For each feature in the list
-        for feat_tuple in self.features_limits:
+        for feat_tuple in self.features_replace:
             feature_name =  feat_tuple[0]
             feature_replace_value = feat_tuple[1]
 
@@ -689,7 +689,7 @@ class CatImputer(BaseEstimator, TransformerMixin):
         
 
         # For each feature to be imputer
-        for feat_tuple in self.features_limits:
+        for feat_tuple in self.features_replace:
             
             # Retrieve its name
             feature_name = feat_tuple[0]
