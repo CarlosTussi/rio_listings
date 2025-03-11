@@ -291,6 +291,7 @@ Here are some ideas and suggestions for future versions:
     * Augmentation of our training data to better represent the problem space.
 - Deeper analysis of description and amenities strings to improve correlation while avoiding overfitting.
 - Cross validation technique for the best model selection phase and not only with GridSearchCV as it was done on this project.
+- Use a validation set for fine tuning the model.
 - Set up a CI/CD automation process for future releases.
 
 
