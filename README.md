@@ -122,8 +122,8 @@ The diagram bellow illustrates the main data preprocessing pipeline:
     * MaxMinScaler()
 
 ### Model
-
-- In order to achieve the final model, the following steps were necessary:
+- This project can be seen as an [MLOps Level 0: Manual process](https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning).  
+- In order to achieve the final model, the following steps were necessary
 
 ![alt text](misc/modeltraining.png)
 
@@ -280,13 +280,17 @@ Show the recap to the user of the input data:
 
 - **Seasonality:**
     * The model does not take into consideration seasonality for the moment which could improve the model. (Ex: Carnival season)
+ 
+- **Model Delgradation:**
+    * With prices changing over time due to infltion, market trend, etc., the model will degrade overtime. 
 
 ## Future Versions
 Here are some ideas and suggestions for future versions:  
-- Periodically retrieve more data with new and updated properties when they get released on Insde Airbnb's website.
+- Periodically retrieve more data with new and updated properties when they get released on Insde Airbnb's website to retrain the model and avoid model degradation with changes in rental prices, inflations, etc.
     * Take seasonality into consideration (summer holidays, carvinal, etc.)
     * Augmentation of our training data to better represent the problem space.
 - Deeper analysis of description and amenities strings to improve correlation while avoiding overfitting.
-- Cross validation technique for the best model selection phase and not only with GridSearchCV as it was done on this project. 
+- Cross validation technique for the best model selection phase and not only with GridSearchCV as it was done on this project.
+- Set up a CI/CD automation process for future releases.
 
 
