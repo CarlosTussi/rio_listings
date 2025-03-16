@@ -1,5 +1,8 @@
 # Airbnb Propeprty Price Predictor 
 
+Live Web App: https://riolistings.streamlit.app/
+
+
 ## Table of Contents
 - [About](#about)
 - [Data](#data)
@@ -241,9 +244,11 @@ Show the recap to the user of the input data:
       python -m source.training.main
       ```
 #### App
-1. Run the following commands from the main folder 'rio_listings'
+
+1. Access the live web app hosted on Streamlit from [here](https://riolistings.streamlit.app/).
+
+2. Alternatively, run from the command line from the main folder 'rio_listings'
     ```sh
-      $env:PYTHONPATH = (Get-Location)
       streamlit run .\source\app\main.py
       ```
 ## Limitations
