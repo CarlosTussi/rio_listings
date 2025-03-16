@@ -9,12 +9,19 @@
         streamlit run .\source\app\main.py
 
 '''
+import sys
+import os
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+sys.path.insert(0, PROJECT_ROOT) 
 
 import joblib
-import os
 import time
 from source.app.gui import *
 from source.config import *
+
+
+
 
 if __name__ == "__main__":
     
@@ -22,6 +29,8 @@ if __name__ == "__main__":
     # LOAD MODELS #
     ###############
     # Main price prediction model
+
+    # Define the absolute path for the model
     price_pred_model = joblib.load(MAIN_PRED_MODEL_PATH)
 
     # Cluster model for coordinates
