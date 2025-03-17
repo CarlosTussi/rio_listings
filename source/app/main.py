@@ -5,7 +5,6 @@
     * How to run (Windows):   
      (!) From the 'rio_listings' folder.
 
-        $env:PYTHONPATH = (Get-Location)
         streamlit run .\source\app\main.py
 
 '''
