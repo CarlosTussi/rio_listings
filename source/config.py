@@ -96,32 +96,22 @@ GRID_SEARCH_CV = 3
 ################
 #  File paths  #
 ################
-import sys
-import os
 
+import os
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+
+# Main prediction model filepath
 MAIN_PRED_MODEL_PATH = os.path.join(PROJECT_ROOT, "models", "price_pred_model.joblib")
 
+# Geo-cluster kmeans model filepath
 GEO_CLUSTER_MODEL_PATH = os.path.join(PROJECT_ROOT, "models", "geo_kmeans_pred_model.joblib")
 
 # Scaler model filepath
 SCALER_MODEL_PATH = os.path.join(PROJECT_ROOT, "models", "scaler_transf_model.joblib")
 
+
 # Input dataset filepath
 TRAINING_DATA_PATH = 'data/listings.csv'
-
-# Main prediction model filepath
-#MAIN_PRED_MODEL_PATH = 'models/price_pred_model.joblib'
-
-# Geo-cluster kmeans model filepath
-#GEO_CLUSTER_MODEL_PATH = 'models/geo_kmeans_pred_model.joblib'
-
-# Scaler model filepath
-#SCALER_MODEL_PATH = 'models/scaler_transf_model.joblib'
-
-
-
-
 
 
 ###################

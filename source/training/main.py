@@ -12,6 +12,11 @@
 
 '''
 
+import sys
+import os
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+sys.path.insert(0, PROJECT_ROOT) 
+
 import pandas as pd
 import numpy as np
 import joblib
@@ -19,6 +24,8 @@ import source.training.data_preprocess as pre
 import source.training.model_training_evaluation as mdl
 from source.config import * 
 from sklearn.model_selection import train_test_split
+
+
 
 
 if __name__ == "__main__":
