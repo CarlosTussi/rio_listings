@@ -47,7 +47,7 @@ def pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
 
 
 '''
-    def preprocess(df : pd.DataFrame, target: str) -> tuple:
+    def preprocess(df : pd.DataFrame, target: str, geo_cluster_pred_model, scaler_transf_model):
     
         - This functions receives the target feature and the input dataset and transforms the data to be fit to a model.
 
@@ -55,10 +55,12 @@ def pipeline_preparation(df : pd.DataFrame, target : str) -> tuple:
     ******
        - df: pd.DataFrame
        - target: str
+       - geo_cluster_pred_model             # Pre-trained KMeans model
+       - scaler_transf_model                # Pre-trained scaler
 
     Output:
     *******
-       - tuple: (pd.DataFrame, np.Series)
+       - tuple: (pd.DataFrame, pd.DataFrame)
 
 '''
 def preprocess(df : pd.DataFrame, target: str, geo_cluster_pred_model, scaler_transf_model) -> tuple:

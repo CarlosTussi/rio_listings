@@ -1,14 +1,21 @@
 '''
 
-Running:
+    * This module is responsible for analysing two different datasets and generating a report to assist in data drift detection.
 
-*) From rio_listings folder 
+    * Two data sets are required: a reference dataset and a new dataset that we want to compare with.
+        - Reference dataset: Automatically uses the training dataset that was use for the current trained model.
+        - New dataset: programatically fetched from a given URL provided as an input for this module.
 
-*) python -m  source.evaluation.model_evaluation
+    * How to run:
+        * From inside rio_listing folder execute:
+
+        python -m  source.evaluation.model_evaluation [URL WITH THE NEW DATASET]
+
+    * Improtant: The new dataset needs to conform with the training dataset, that is, it must have the same features as the original dataset.
+                - For more details, check this project README at https://github.com/CarlosTussi/rio_listings
 
 
 
-https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-12-27/data/listings.csv.gz
 '''
 
 
@@ -46,7 +53,22 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")
 sys.path.insert(0, PROJECT_ROOT) 
 
 '''
+    def setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new):
+    
+        - This function generates an HTML report comparing the performance 
+        of the two datasets (reference and new/current dataset) with the current model.
+    Input:
+    ******
+       - X_ref: Reference dataset
+       - y_ref: Reference target values
+       - X_new: New dataset
+       - y_new: New target values
+       - prediction_ref: Prediction values for the reference dataset
+       - prediction_new: Predicition values for the new dataset
 
+    Output:
+    *******
+       - None
 
 '''
 def setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new):
@@ -93,11 +115,24 @@ def setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new
 
     # Save HTML file and display in browser
     output_file = "source/evaluation/regression_performance_report.html"
-    regression_performance.save_html(output_file)
-    webbrowser.open(output_file)
+    regression_performance.save_html(output_file)   
+    webbrowser.open(output_file)    
     
 
 '''
+    def retrieve_datasets(reference_dataset_location, new_dataset_location):
+    
+        - This function retrieves the two datasets needed: the training dataset (localy) and the new dataset (fetched remotely)
+
+    Input:
+    ******
+       - reference_dataset_location : str
+       - new_dataset_location : str             #URL with remote dataset.
+
+    Output:
+    *******
+       - reference_raw_data : DataFrame     # Not processed
+       - new_raw_data : DataFrame           # Not processed
 
 
 '''
@@ -117,6 +152,21 @@ def retrieve_datasets(reference_dataset_location, new_dataset_location):
 
     
 '''
+    def process_data(reference_raw_data, new_raw_data):
+    
+        - This function processes both datasets conforming and using the same pipelines defined during training.
+
+    Input:
+    ******
+       - reference_raw_data : DataFrame     # Not processed
+       - new_raw_data                       # Not processed
+
+    Output:
+    *******
+       - X_ref : DataFrame              # Proccessed Reference Dataset Input Features
+       - y_ref : DataFrame              # Proccessed Reference Dataset Target Feature
+       - X_new : DataFrame              # Proccessed New Dataset Input Features
+       - y_new : DataFrame              # Proccessed New Dataset Target Feature
 
 
 '''
