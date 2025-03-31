@@ -25,7 +25,7 @@ def preprocess_data(X, geo_cluster_pred_model, scaler_transf_model):
         preprocess_data = Pipeline([
             ('cat_feat_extraction_pipeline_app', pipelines.cat_feat_extraction_pipeline_app),  
             ('geo_cluster_app', pipelines.GeoClusterPredict(geo_cluster_pred_model)),
-            ('scaler_app', pipelines.CustomMinMaxScalerAppTransformer(scaler_transf_model)),
+            ('scaler_app', pipelines.CustomTrainedMinMaxScalerTransformer(scaler_transf_model)),
         ])
 
         X = preprocess_data.fit_transform(X)
