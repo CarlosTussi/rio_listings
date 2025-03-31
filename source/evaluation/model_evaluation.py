@@ -92,7 +92,7 @@ def setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new
                             column_mapping=column_mapping)
 
     # Save HTML file and display in browser
-    output_file = "regression_performance_report.html"
+    output_file = "source/evaluation/regression_performance_report.html"
     regression_performance.save_html(output_file)
     webbrowser.open(output_file)
     
