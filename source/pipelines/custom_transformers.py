@@ -345,6 +345,7 @@ class PreprocessCorpus(BaseEstimator, TransformerMixin):
         
         def process_corpus(corpus):
             
+            
             corpus = corpus.lower()
             corpus = re.sub(r'[^a-zA-Z ]', ' ', corpus)
             corpus = re.sub(r'\b(the|and|in|with|to|a|of|br|is|from|for|on|this|you|it|has|all|at|de|by|br)\b', ' ', corpus)
@@ -944,26 +945,37 @@ class GeoClusterPredict(BaseEstimator, TransformerMixin):
 class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.minmax = MinMaxScaler()
+        self.dfcolumns = []
+        self.dfindex = []
     
     def fit(self, X):
+        # Train the MinMaxScaler
         self.minmax.fit(X)
+
+        # Save the trained MinMaxScaler to be used later
         joblib.dump(self.minmax, SCALER_MODEL_PATH)
+
+        # Save the index and columns name order to re-create the dataframe after transformation
+        self.dfcolumns = X.columns
+        self.dfindex = X.index
         return self
 
     def transform(self, X, y=None):
         
         print("Start - CustomMinMaxScaler")
         
-        
         X = self.minmax.transform(X)
     
+        # Convert back into a Data Frame
+        X = pd.DataFrame(X, index=self.dfindex, columns=self.dfcolumns)
+
         print("End - CustomMinMaxScaler")
         
         
         return X
 
 '''
-        class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin)
+        class CustomTrainedMinMaxScalerTransformer(BaseEstimator, TransformerMixin)
         -----------------------------------------------------------------------
                 Description:
                 ************
@@ -983,13 +995,14 @@ class CustomMinMaxScaler(BaseEstimator, TransformerMixin):
                 ************
                     - Reorder dataset to reflect the same order as the trained MinMaxScaler()
 '''
-class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
+class CustomTrainedMinMaxScalerTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, model):
         self.model = model
         self.columns_order = None
     
     def fit(self, X):
         self.columns_order = self.model.feature_names_in_
+
         return self
 
     def transform(self, X, y=None):
@@ -1002,8 +1015,16 @@ class CustomMinMaxScalerAppTransformer(BaseEstimator, TransformerMixin):
         for col in self.columns_order:
             X_scaler[col] = X[col]
 
+        # To transform back into a dataframe
+        dfcolumns = X_scaler.columns
+        dfindex = X_scaler.index
+
+        # Transform scale the data
         X = self.model.transform(X_scaler)
     
+        # Convert back into dataframe
+        X = pd.DataFrame(X, index=dfindex, columns=dfcolumns)
+
         print("End - CustomMinMaxScalerAppTransformer")
         
         

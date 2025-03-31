@@ -1,0 +1,171 @@
+'''
+
+Running:
+
+*) From rio_listings folder 
+
+*) python -m  source.evaluation.model_evaluation
+
+
+
+https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-12-27/data/listings.csv.gz
+'''
+
+
+import pandas as pd
+import numpy as np
+import sys
+import requests
+import os
+import io
+import gzip
+import webbrowser
+
+
+from evidently import ColumnMapping
+from evidently.report import Report
+from evidently.metrics import (
+    RegressionQualityMetric,
+    RegressionPredictedVsActualScatter,
+    RegressionErrorPlot,
+    RegressionAbsPercentageErrorPlot,
+    RegressionErrorDistribution,
+    RegressionErrorNormality,
+    RegressionTopErrorMetric,
+    RegressionErrorBiasTable,
+)
+
+import source.training.data_preprocess as pre
+import joblib
+
+
+from source.config import * 
+from source.evaluation.process_data_evaluation import *
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+sys.path.insert(0, PROJECT_ROOT) 
+
+'''
+
+
+'''
+def setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new):
+    ###################
+    # SETUP EVIDENTLY # 
+    ###################
+    # Prepare the reference data and current (new) data for comparison with Evidently
+    # Reference Data
+    reference_df = X_ref.copy()
+    reference_df["price"] = y_ref
+    reference_df["prediction"] = prediction_ref
+
+    # Current (new) Data
+    new_df = X_new.copy()
+    new_df["price"] = y_new
+    new_df["prediction"] = prediction_new
+
+    # Prepare the mapping
+    column_mapping = ColumnMapping()
+    column_mapping.target = "price"
+    # Defining which feature contains the predicted values for both reference and current data
+    column_mapping.prediction = "prediction"
+    column_mapping.numerical_features = list(X_ref._get_numeric_data().columns)
+    column_mapping.categorical_features = [] # Considering all features numerical after transformation. (For testing purposes)
+
+
+
+    #######################
+    # GENERATE THE REPORT #
+    #######################
+    regression_performance = Report(metrics=[
+                                            RegressionQualityMetric(),
+                                            RegressionPredictedVsActualScatter(),
+                                            RegressionErrorPlot(),
+                                            RegressionAbsPercentageErrorPlot(),
+                                            RegressionErrorDistribution(),
+                                            RegressionErrorNormality(),
+                                            RegressionTopErrorMetric(),
+                                            RegressionErrorBiasTable(),
+                                        ]) #Not a time series dataset
+    regression_performance.run(current_data=new_df, 
+                            reference_data=reference_df,   
+                            column_mapping=column_mapping)
+
+    # Save HTML file and display in browser
+    output_file = "regression_performance_report.html"
+    regression_performance.save_html(output_file)
+    webbrowser.open(output_file)
+    
+
+'''
+
+
+'''
+def retrieve_datasets(reference_dataset_location, new_dataset_location):
+
+    # Retrieve reference data. (Training Data)
+    reference_raw_data = pd.read_csv(reference_dataset_location, sep = ",")
+
+
+    # Download the new data
+    new_data_zip = requests.get(new_dataset_location).content
+    with gzip.open(io.BytesIO(new_data_zip)) as csv_file:
+        new_raw_data = pd.read_csv(csv_file)
+
+    return reference_raw_data, new_raw_data
+
+
+    
+'''
+
+
+'''
+def process_data(reference_raw_data, new_raw_data):
+    X_ref, y_ref = preprocess(reference_raw_data, "price", geo_cluster_pred_model, scaler_transf_model) 
+    X_new, y_new = preprocess(new_raw_data, "price", geo_cluster_pred_model, scaler_transf_model) 
+
+    return X_ref, y_ref, X_new, y_new
+
+
+if __name__ == "__main__":
+    
+    ###############
+    # LOAD MODELS #
+    ###############
+    # Define the absolute path for the model
+    price_pred_model = joblib.load(MAIN_PRED_MODEL_PATH)
+    # Cluster model for coordinates
+    geo_cluster_pred_model = joblib.load(GEO_CLUSTER_MODEL_PATH)
+    # Data Normalisation model
+    scaler_transf_model = joblib.load(SCALER_MODEL_PATH)
+    
+    # Retrieve url from command line
+    if len(sys.argv) <= 1:
+        print("[ERROR] Data URL missing")
+    else:
+
+        #########################
+        # RETRIEVE RAW DATASETS #
+        #########################
+        print("Retrieving datasets...")
+        reference_raw_data, new_raw_data = retrieve_datasets(TRAINING_DATA_PATH, sys.argv[1])
+        print("Datasets retrieved!")
+
+        #######################
+        # PREPROCESS DATASETS #
+        #######################
+        X_ref, y_ref, X_new, y_new = process_data(reference_raw_data, new_raw_data)
+
+
+        #####################################
+        # PREDICT WITH REF AND NEW DATASETS #
+        #####################################
+        # Predict reference dataset
+        prediction_ref = price_pred_model.predict(X_ref)
+        # Predict new dataset
+        prediction_new = price_pred_model.predict(X_new)
+
+        #########################
+        # GENERATE DRIFT REPORT #
+        #########################
+        setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new)
