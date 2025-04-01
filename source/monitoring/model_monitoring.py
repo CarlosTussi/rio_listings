@@ -9,7 +9,7 @@
     * How to run:
         * From inside rio_listing folder execute:
 
-        python -m  source.evaluation.model_evaluation [URL WITH THE NEW DATASET]
+        python -m  source.monitoring.model_evaluation [URL WITH THE NEW DATASET]
 
     * Improtant: The new dataset needs to conform with the training dataset, that is, it must have the same features as the original dataset.
                 - For more details, check this project README at https://github.com/CarlosTussi/rio_listings
@@ -47,7 +47,7 @@ import joblib
 
 
 from source.config import * 
-from source.evaluation.process_data_evaluation import *
+from source.monitoring.process_data_monitoring import *
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 sys.path.insert(0, PROJECT_ROOT) 
@@ -114,7 +114,7 @@ def setup_drif_report(X_ref, y_ref, X_new, y_new, prediction_ref, prediction_new
                             column_mapping=column_mapping)
 
     # Save HTML file and display in browser
-    output_file = "source/evaluation/regression_performance_report.html"
+    output_file = "source/monitoring/regression_performance_report.html"
     regression_performance.save_html(output_file)   
     webbrowser.open(output_file)    
     
