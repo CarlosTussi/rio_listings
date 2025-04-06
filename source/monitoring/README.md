@@ -8,7 +8,7 @@
 
 - To generate the report, module was integrated with [Evidently AI](https://www.evidentlyai.com/).
 
->_Important: This initial version will fetch a new data set from the web with the provided URL given by the user. For the Reference Dataset, it uses by default the training dataset in the [data folder](https://github.com/CarlosTussi/rio_listings/tree/main/data)_.
+>_**Important**: This initial version will fetch a new data set from the web with the provided URL given by the user. For the Reference Dataset, it uses by default the training dataset in the [data folder](https://github.com/CarlosTussi/rio_listings/tree/main/data)_.
 
 ## How to use it
 1) Make sure that the models are trained and exist in the [models folder](https://github.com/CarlosTussi/rio_listings/tree/main/models).
