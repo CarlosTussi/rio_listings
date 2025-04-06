@@ -1,6 +1,6 @@
 # Containers
 
-In case there are difficulties or compatibility issues to run this project, a container was created to address these problems and allow the training using a dataset.
+In case there are difficulties or compatibility issues in running this project, a container was created to address these potential problems, allowing the training module to generate the models.
 
 ## How to run the container
 1. Clone this repository

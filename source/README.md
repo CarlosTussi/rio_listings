@@ -28,3 +28,11 @@
     - Preproceess user input data and predict property price based on that data.
 - **_gui.py_**
     - All the elements from the user interface.
+
+> * **_monitoring/_**
+- **_main.py_**
+    - Starting point of the monitoring module.
+- **_model_monitoring_report.py_**
+    - Orchestrates de monitoring process.
+- **_process_data_monitoring.py_**
+    - Preproceess data for the monitoring module.

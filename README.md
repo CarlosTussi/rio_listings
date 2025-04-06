@@ -19,6 +19,8 @@ Live Web App: https://riolistings.streamlit.app/
 - [Installation](#installation) 
     - [Download](#installation)
     - [Usage](#usage)
+    - [Container](#container)
+- [Monitoring](#monitoring)
 - [Limitations](#limitations)
 - [Future Versions](#future-versions)
 
@@ -68,6 +70,7 @@ High level overview of project architecture:
  1) Training stage. 
  2) Models generated from the training stage to be used in the App stage.
  3) App stage.
+ 4) Model monitoing module.
 
 ## Training
 ### Data Preprocessing Pipeline
@@ -235,6 +238,7 @@ Show the recap to the user of the input data:
 ### Usage
 - The training and the app run independently as the models are already pre-loaded in the repository.
 - Should you wish to change the model, run the trining part first and then the app.
+
 #### Training
 1. Download the training dataset [here](https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-06-27/data/listings.csv.gz) if not already done.
 2. Place the downloaded data inside the 'data' folder
@@ -251,6 +255,18 @@ Show the recap to the user of the input data:
     ```sh
       streamlit run .\source\app\main.py
       ```
+
+
+### Container
+- The training module to generate the models can also be run from a Docker container that was created.
+- For more instructions on how to run using the container, check the **containers** section [here](https://github.com/CarlosTussi/rio_listings/tree/main/containers).
+
+## Monitoring
+- As we know, as soon as models are deployed they start to degrade.
+- In orde to detect drifiting as time passes, a monitoring module was developed to check the model performance with different datasets.
+- At the current stage of this project, the monitoring is not automated - that is to say, it does not run periodically by itself - and it must be run manually with the new dataset by the user. However, this is enough to analyse the model through a report and to detect eventual drifiting (conceptual or data related drifiting).
+- For more information about the module, check [here](https://github.com/CarlosTussi/rio_listings/tree/main/source/monitoring).
+
 ## Limitations
 - **Price:**
     * The model has been trained with price values in the following range: (0,850]
@@ -291,12 +307,12 @@ Show the recap to the user of the input data:
 
 ## Future Versions
 Here are some ideas and suggestions for future versions:  
-- Periodically retrieve more data with new and updated properties when they get released on Insde Airbnb's website to retrain the model and avoid model degradation with changes in rental prices, inflations, etc.
+- Create an automated process to periodically retrieve more data when they get released on Insde Airbnb's website, automatically monitor and dedtect any drifting that could be due to changes in rental prices, inflations, etc.
     * Take seasonality into consideration (summer holidays, carvinal, etc.)
     * Augmentation of our training data to better represent the problem space.
 - Deeper analysis of description and amenities strings to improve correlation while avoiding overfitting.
 - Cross validation technique for the best model selection phase and not only with GridSearchCV as it was done on this project.
 - Use a validation set for fine tuning the model.
-- Set up a CI/CD automation process for future releases.
+- Set up a whole CI/CD automation process for future releases.
 
 
