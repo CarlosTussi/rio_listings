@@ -2,8 +2,8 @@
 
 Live Web App: https://riolistings.streamlit.app/
 
-* If the web app seems offline with a message similar to this: _"Zzzz
-This app has gone to sleep due to inactivity. Would you like to wake it back up?"_, simply click the button _"Yes, get this app back up!"_ to activate it. 
+>**Important**: If the web app seems offline with a message similar to this: **_"Zzzz
+This app has gone to sleep due to inactivity. Would you like to wake it back up?"_**, simply click the button **_"Yes, get this app back up!"_** to run it. 
 
 
 ## Table of Contents
