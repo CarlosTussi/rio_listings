@@ -345,11 +345,19 @@ class PreprocessCorpus(BaseEstimator, TransformerMixin):
         
         def process_corpus(corpus):
             
-            
+            # Convert everything to lower case
             corpus = corpus.lower()
+            # Remove eeverytyhing except letters and space
             corpus = re.sub(r'[^a-zA-Z ]', ' ', corpus)
-            corpus = re.sub(r'\b(the|and|in|with|to|a|of|br|is|from|for|on|this|you|it|has|all|at|de|by|br)\b', ' ', corpus)
+            # Removing specific words
+            corpus = re.sub(r'\b(the|are|and|in|with|to|a|of|br|is|from|for|on|this|you|it|has|all|at|de|by|br)\b', ' ', corpus)
+            # Removing line breaker tag from HTML
             corpus = re.sub(r'br\b', '', corpus)
+            # Removing extra white spaces
+            corpus = re.sub(r' +', ' ', corpus)
+            # Remove leading/trailing spaces
+            corpus = corpus.strip()
+
             return corpus
     
         X[self.corpus_feature] = X[self.corpus_feature].apply(lambda x : process_corpus(x))
