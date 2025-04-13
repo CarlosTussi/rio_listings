@@ -41,4 +41,21 @@ def test_DropNasTransformer():
     drop_nas2.fit(X_missing)
     # No empty columns after transformation
     assert pd.isnull(drop_nas1.transform(X_missing)["D"]).sum() == 0
+
+
+'''
+    Testing: PreprocessCorpus
+'''
+
+def test_PreprocessCorpus():
+    X_corpus
+
+    ################################
+    # Removing unwanted characters #
+    ################################
+    preprocess_corpus1 = PreprocessCorpus("description")
+    preprocess_corpus1.fit(X_corpus)
+    assert(preprocess_corpus1.transform(X_corpus).equals(X_processed_corpus))
+
+
     
