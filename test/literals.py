@@ -1,6 +1,16 @@
 import pandas as pd
 import numpy as np
 
+
+
+# Sample data set
+X = pd.DataFrame({
+    'A': [1, 2, 7, 0.4, 5.9],
+    'B': [7.5, 2.8, 3, 4, 5],
+    'C': [1.7, 2, 30, 8.9, 5],
+    'D': [1, 20, 3, 4, 5]
+})
+
 # Sample data set with missing values
 X_missing = pd.DataFrame({
     'A': [1, 2, np.nan, 4, 5],
@@ -8,6 +18,7 @@ X_missing = pd.DataFrame({
     'C': [1, 2, 3, np.nan, 5],
     'D': [1, 2, 3, 4, 5]
 })
+
 
 # Sample data with corpus to be processed.
 X_corpus = pd.DataFrame({
@@ -58,4 +69,21 @@ X_geolocation = pd.DataFrame({
         -43.2001, -43.1987, -43.2023, -43.1965, -43.2042,  
         -43.3601, -43.3587, -43.3625, -43.3559, -43.3642
     ]
+})
+
+X_encoding = pd.DataFrame({
+    "house_types" : ["apartment", "room", "room", 
+                     "apartment", "studio", "room",
+                     "hotel", "house", "house"]
+})
+
+X_processed_encoding = pd.DataFrame({
+"house_types_apartment": [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+"house_types_hotel":    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0],
+"house_types_house":    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0],
+"house_types_room":     [0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+"house_types_studio":   [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0]
+
+
+
 })

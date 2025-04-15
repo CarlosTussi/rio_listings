@@ -52,6 +52,32 @@ def test_ContainWordsTransformer():
     assert(X_mod[NEW_FT_NAME].equals(X_processed_lux))
 
 
+'''
+    Testing: CustomMinMaxScaler
+'''
+
+def test_CustomMinMaxScaler():
+    customminmax = CustomMinMaxScaler()
+    customminmax.fit(X)
+    X_mod = customminmax.transform(X)
+    # TESTING: Transformed dataset is a Pandas DataFrame 
+    assert(isinstance(X_mod, pd.DataFrame))
+
+
+'''
+    Testing: FeatureEncoding
+'''
+def test_FeatureEncoding():
+    feature_encoding = FeatureEncoding(["house_types"])
+    feature_encoding.fit(X_encoding)
+    X_mod = feature_encoding.transform(X_encoding)
+
+    # TESTING: Testing elements correctly encoded
+    assert(X_mod.equals(X_processed_encoding))
+    # TESTING: Transformed dataset is a Pandas DataFrame 
+    assert(isinstance(X_mod, pd.DataFrame))
+    
+
 
 '''
     Testing: DropNasTransformer
